@@ -4,11 +4,7 @@ pipeline {
     stages {
         stage('unit tests') {
             steps {
-                try {
-                    sh './gradlew test --no-daemon'
-                } finally {
-                    junit 'build/test-results/test/*.xml'
-                }
+                sh './gradlew test --no-daemon'
             }
         }
 
@@ -28,6 +24,12 @@ pipeline {
             steps {
                 sh 'echo docker build image step'
             }
+        }
+    }
+
+    post {
+        always {
+            junit 'build/test-results/test/*.xml'
         }
     }
 }

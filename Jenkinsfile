@@ -1,16 +1,17 @@
 pipeline {
-    stages {
-        stage('checkout') {
-            deleteDir()
-            git 'https://github.com/xaero31/smoke_cloud'
-        }
+    agent any
 
+    stages {
         stage('unit tests') {
-            sh './gradlew test --no-daemon'
+            steps {
+                sh './gradlew test --no-daemon'
+            }
         }
 
         stage('gradle build') {
-            sh './gradlew build --no-daemon'
+            steps {
+                sh './gradlew build --no-daemon'
+            }
         }
 
         stage('archive jar') {
@@ -18,7 +19,9 @@ pipeline {
         }
 
         stage('docker build image') {
-            // todo
+            steps {
+                sh 'echo docker build image step'
+            }
         }
     }
 }

@@ -23,7 +23,7 @@ pipeline {
 
         stage('docker build image') {
             steps {
-                // todo
+                sh 'echo docker build image step'
             }
         }
     }

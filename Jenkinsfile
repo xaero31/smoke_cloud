@@ -13,6 +13,10 @@ pipeline {
             sh './gradlew build --no-daemon'
         }
 
+        stage('archive jar') {
+            archiveArtifacts 'build/libs/*.jar'
+        }
+
         stage('docker build image') {
             // todo
         }

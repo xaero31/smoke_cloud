@@ -4,7 +4,11 @@ pipeline {
     stages {
         stage('unit tests') {
             steps {
-                sh './gradlew test --no-daemon'
+                try {
+                    sh './gradlew test --no-daemon'
+                } finally {
+                    junit 'build/test-results/test/*.xml'
+                }
             }
         }
 

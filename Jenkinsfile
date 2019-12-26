@@ -15,7 +15,9 @@ pipeline {
         }
 
         stage('archive jar') {
-            archiveArtifacts 'build/libs/*.jar'
+            steps {
+                archiveArtifacts 'build/libs/*.jar'
+            }
         }
 
         stage('docker build image') {

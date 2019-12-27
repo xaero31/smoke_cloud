@@ -2,6 +2,13 @@ pipeline {
     agent any
 
     stages {
+        stage('git checkout') {
+            steps {
+                deleteDir()
+                git branch: 'dev', url: 'https://github.com/xaero31/smoke_cloud'
+            }
+        }
+
         stage('unit tests') {
             steps {
                 sh './gradlew test --no-daemon'

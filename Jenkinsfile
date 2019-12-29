@@ -95,7 +95,7 @@ pipeline {
                 withCredentials([[$class: "UsernamePasswordMultiBinding", credentialsId: "github",
                                   usernameVariable: "GIT_USERNAME", passwordVariable: "GIT_PASSWORD"]]) {
                     sh "git tag " + env.RELEASE_VERSION_TAG
-                    sh "git push --tags"
+                    sh "git push " + $GIT_USERNAME + ":" + $GIT_PASSWORD + " --tags"
                 }
             }
         }

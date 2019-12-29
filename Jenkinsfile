@@ -5,12 +5,11 @@ pipeline {
         stage("git checkout") {
             steps {
                 script {
-                    String branch = env.GIT_BRANCH
-                    env.GIT_BRANCH = branch.split("/")[1]
-                    echo env.GIT_BRANCH
+                    String branch = env.GIT_BRANCH.split("/")[1]
+                    echo branch
                 }
                 deleteDir()
-                git branch: env.GIT_BRANCH, url: "https://github.com/xaero31/smoke_cloud"
+                git branch: branch, url: "https://github.com/xaero31/smoke_cloud"
             }
         }
 

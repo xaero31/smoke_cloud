@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SmokeCloudApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SmokeCloudApplication.class, args);
+//		SpringApplication.run(SmokeCloudApplication.class, args);
+		System.out.println("origin/dev".split("/")[1]);
 	}
 }

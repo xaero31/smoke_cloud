@@ -18,7 +18,9 @@ pipeline {
                             env.RELEASE_VERSION_TAG = "1.1.1"
                         } else {
                             String[] versionParts = latestTag.split("\\.")
-                            int[] intVersionParts = Arrays.stream(versionParts).mapToInt(Integer::parseInt).toArray()
+                            int[] intVersionParts = Arrays.stream(versionParts)
+                                                          .mapToInt(x -> Integer.parseInt(x)
+                                                          .toArray()
                             switch(env.RELEASE_VERSION) {
                                 case "fix":
                                     intVersionParts[2]++

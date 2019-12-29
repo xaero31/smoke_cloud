@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     String branch = env.GIT_BRANCH
-                    env.GIT_BRANCH = branch.split("/")[branch.length - 1]
+                    env.GIT_BRANCH = branch.split("/")[branch.length() - 1]
                     echo env.GIT_BRANCH
                 }
                 deleteDir()

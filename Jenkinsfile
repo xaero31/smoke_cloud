@@ -18,9 +18,12 @@ pipeline {
                             env.RELEASE_VERSION_TAG = "1.1.1"
                         } else {
                             String[] versionParts = latestTag.split("\\.")
-                            int[] intVersionParts = Arrays.stream(versionParts)
-                                                          .mapToInt(x -> Integer.parseInt(x)
-                                                          .toArray()
+                            int[] intVersionParts = new int[versionParts.length]
+
+                            for (int i = 0; i < intVersionParts.length; i++) {
+                                intVersionParts[i] = Integer.parseInt(versionParts[i])
+                            }
+
                             switch(env.RELEASE_VERSION) {
                                 case "fix":
                                     intVersionParts[2]++
@@ -35,6 +38,7 @@ pipeline {
                                     intVersionParts[2] = 1
                                     break
                             }
+
                             env.RELEASE_VERSION_TAG = intVersionParts[0] + "." +
                                                       intVersionParts[1] + "." + intVersionParts[2]
                         }

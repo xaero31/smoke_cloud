@@ -5,7 +5,7 @@ pipeline {
         stage("git checkout") {
             steps {
                 script {
-                    env.BRANCH = env.BRANCH.split("/")[1]
+                    env.BRANCH = env.GIT_BRANCH.split("/")[1]
                     echo env.BRANCH
                 }
                 deleteDir()

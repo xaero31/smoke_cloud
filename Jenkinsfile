@@ -4,6 +4,9 @@ pipeline {
     stages {
         stage("git checkout") {
             steps {
+                script {
+                    env.GIT_BRANCH = env.GIT_BRANCH.split("/")[1]
+                }
                 deleteDir()
                 git branch: env.GIT_BRANCH, url: "https://github.com/xaero31/smoke_cloud"
             }
@@ -12,7 +15,7 @@ pipeline {
         stage("prepare version tag") {
             steps {
                 script {
-                    if (env.GIT_BRANCH.equals("origin/dev")) {
+                    if (env.GIT_BRANCH.equals("dev")) {
                         String latestTag = sh(returnStdout: true, script: "git tag --sort=-creatordate | head -n 1").trim()
                         if (latestTag.length() == 0) {
                             env.RELEASE_VERSION_TAG = "1.1.1"
@@ -68,11 +71,11 @@ pipeline {
         stage("docker build image") {
             steps {
                 script {
-                    if ("origin/dev".equals(env.GIT_BRANCH)) {
+                    if ("dev".equals(env.GIT_BRANCH)) {
                         sh "docker build -t smoke-cloud:dev ."
                     }
 
-                    if ("origin/master".equals(env.GIT_BRANCH)) {
+                    if ("master".equals(env.GIT_BRANCH)) {
                         sh "docker build -t smoke-cloud:" + env.RELEASE_VERSION_TAG + " ."
                     }
                 }

@@ -6,6 +6,7 @@ pipeline {
             steps {
                 script {
                     env.GIT_BRANCH = env.GIT_BRANCH.split("/")[1]
+                    echo env.GIT_BRANCH
                 }
                 deleteDir()
                 git branch: env.GIT_BRANCH, url: "https://github.com/xaero31/smoke_cloud"

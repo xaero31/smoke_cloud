@@ -5,7 +5,7 @@ pipeline {
         stage("git checkout") {
             steps {
                 deleteDir()
-                git "https://github.com/xaero31/smoke_cloud"
+                git branch: env.BRANCH_NAME, url: "https://github.com/xaero31/smoke_cloud"
             }
         }
 
@@ -61,7 +61,15 @@ pipeline {
 
         stage("docker build image") {
             steps {
-                sh "docker build -t smoke-cloud:new ."
+                script {
+                    if ("dev".equals(env.BRANCH_NAME)) {
+                        sh "docker build -t smoke-cloud:dev ."
+                    }
+
+                    if ("master".equals(env.BRANCH_NAME)) {
+                        sh "docker build -t smoke-cloud:" + env.RELEASE_VERSION_TAG + " ."
+                    }
+                }
             }
         }
 

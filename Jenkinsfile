@@ -16,7 +16,7 @@ pipeline {
         stage("prepare version tag") {
             steps {
                 script {
-                    if (env.BRANCH.equals("dev")) {
+                    if ("dev".equals(enb.BRANCH)) { // todo change to prod
                         String latestTag = sh(returnStdout: true, script: "git tag --sort=-creatordate | head -n 1").trim()
                         if (latestTag.length() == 0) {
                             env.RELEASE_VERSION_TAG = "1.1.1"
@@ -94,8 +94,12 @@ pipeline {
             steps {
                 withCredentials([[$class: "UsernamePasswordMultiBinding", credentialsId: "github",
                                   usernameVariable: "GIT_USERNAME", passwordVariable: "GIT_PASSWORD"]]) {
-                    sh "git tag " + env.RELEASE_VERSION_TAG
-                    sh "git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/xaero31/smoke_cloud --tags"
+                    script {
+                        if ("dev".equals(env.BRANCH)) { // todo change to prod
+                            sh "git tag " + env.RELEASE_VERSION_TAG
+                            sh "git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/xaero31/smoke_cloud --tags"
+                        }
+                    }
                 }
             }
         }

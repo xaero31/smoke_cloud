@@ -6,9 +6,9 @@ pipeline {
             steps {
                 script {
                     env.BRANCH = env.GIT_BRANCH.split("/")[1]
-                    echo env.BRANCH
                 }
                 deleteDir()
+                echo "INFO: checkout $BRANCH branch from github"
                 git branch: env.BRANCH, url: "https://github.com/xaero31/smoke_cloud"
             }
         }
@@ -46,7 +46,11 @@ pipeline {
                             env.RELEASE_VERSION_TAG = intVersionParts[0] + "." +
                                                       intVersionParts[1] + "." + intVersionParts[2]
                         }
+                    } else if ("prod".equals(env.BRANCH)) { // todo change to dev
+                        String currentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm"))
+                        buildName "build-" + env.GIT_COMMIT.substring(0, 10) + "_" + currentDate
                     }
+                    echo "INFO: prepared $BRANCH tag '$RELEASE_VERSION_TAG'"
                 }
             }
         }
@@ -77,7 +81,7 @@ pipeline {
                     }
 
                     if ("master".equals(env.BRANCH)) {
-                        sh "docker build -t smoke-cloud:" + env.RELEASE_VERSION_TAG + " ."
+                        sh "docker build -t smoke-cloud:$RELEASE_VERSION_TAG ."
                     }
                 }
             }
@@ -96,7 +100,7 @@ pipeline {
                                   usernameVariable: "GIT_USERNAME", passwordVariable: "GIT_PASSWORD"]]) {
                     script {
                         if ("dev".equals(env.BRANCH)) { // todo change to prod
-                            sh "git tag " + env.RELEASE_VERSION_TAG
+                            sh "git tag $RELEASE_VERSION_TAG"
                             sh "git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/xaero31/smoke_cloud --tags"
                         }
                     }

@@ -16,7 +16,7 @@ pipeline {
         stage("prepare version tag") {
             steps {
                 script {
-                    if ("dev".equals(enb.BRANCH)) { // todo change to prod
+                    if ("dev".equals(env.BRANCH)) { // todo change to prod
                         String latestTag = sh(returnStdout: true, script: "git tag --sort=-creatordate | head -n 1").trim()
                         if (latestTag.length() == 0) {
                             env.RELEASE_VERSION_TAG = "1.1.1"

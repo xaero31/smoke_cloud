@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.ermakov.nikita'
-version = '0.0.1-SNAPSHOT'
+version = System.getenv('RELEASE_VERSION_TAG')
 sourceCompatibility = '1.8'
 
 repositories {

@@ -6,6 +6,7 @@ pipeline {
             steps {
                 script {
                     env.BRANCH = env.GIT_BRANCH.split("/")[1]
+                    env.PROFILE = "master".equals(env.BRANCH) ? "prod" : env.BRANCH
                 }
                 deleteDir()
                 echo "INFO: checkout $BRANCH branch from github"
@@ -46,9 +47,10 @@ pipeline {
                             env.RELEASE_VERSION_TAG = intVersionParts[0] + "." +
                                                       intVersionParts[1] + "." + intVersionParts[2]
                         }
-                    } else if ("prod".equals(env.BRANCH)) { // todo change to dev
+                    } else {
                         String currentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm"))
-                        buildName "build-" + env.GIT_COMMIT.substring(0, 10) + "_" + currentDate
+                        env.RELEASE_VERSION_TAG = env.GIT_COMMIT.substring(0, 10) + "_" + currentDate
+                        buildName "build:$RELEASE_VERSION_TAG"
                     }
                     echo "INFO: prepared $BRANCH tag '$RELEASE_VERSION_TAG'"
                 }
@@ -96,8 +98,8 @@ pipeline {
 
         stage("push version tag to git") {
             steps {
-                withCredentials([[$class: "UsernamePasswordMultiBinding", credentialsId: "github",
-                                  usernameVariable: "GIT_USERNAME", passwordVariable: "GIT_PASSWORD"]]) {
+                withCredentials($class: "UsernamePasswordMultiBinding", credentialsId: "github",
+                                usernameVariable: "GIT_USERNAME", passwordVariable: "GIT_PASSWORD") {
                     script {
                         if ("dev".equals(env.BRANCH)) { // todo change to prod
                             sh "git tag $RELEASE_VERSION_TAG"

@@ -2,6 +2,7 @@ FROM openjdk:8
 
 MAINTAINER Nikita Ermakov <fontankrovi777@gmail.com>
 
+ARG JAR_NAME=$JAR_NAME
 ENV JAR_NAME=$JAR_NAME
 
 WORKDIR /usr/src/app

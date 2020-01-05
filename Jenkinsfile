@@ -80,12 +80,12 @@ pipeline {
                 script {
                     if ("dev".equals(env.BRANCH)) {
                         sh "docker build -t smoke-cloud:dev --build-arg " +
-                           "JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG.jar ."
+                           "JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG ."
                     }
 
                     if ("master".equals(env.BRANCH)) {
                         sh "docker build -t smoke-cloud:$RELEASE_VERSION_TAG --build-arg " +
-                           "JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG.jar ."
+                           "JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG ."
                     }
                 }
             }

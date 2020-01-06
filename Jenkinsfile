@@ -65,7 +65,6 @@ pipeline {
 
         stage("gradle build") {
             steps {
-                echo "INFO: gradle build $RELEASE_VERSION_TAG version"
                 sh "./gradlew clean build --no-daemon"
             }
         }

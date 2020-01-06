@@ -48,7 +48,7 @@ pipeline {
                                                       intVersionParts[1] + "." + intVersionParts[2]
                         }
                     } else {
-                        String currentDate = new SimpleDateFormat("yyyy-MM-dd_HH:mm").format(new Date())
+                        String currentDate = new Date().format("yyyy-MM-dd_HH:mm")
                         env.RELEASE_VERSION_TAG = env.GIT_COMMIT.substring(0, 10) + "_" + currentDate
                         buildName "build:$RELEASE_VERSION_TAG"
                     }

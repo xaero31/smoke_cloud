@@ -8,6 +8,5 @@ RUN if ["x$JAR_NAME"="x"]; then export JAR_NAME=smoke-cloud-SNAPSHOT; else echo 
 WORKDIR /usr/src/app
 
 EXPOSE 8080
-RUN ls build/libs
 COPY build/libs/$JAR_NAME.jar .
 CMD java -jar $JAR_NAME.jar

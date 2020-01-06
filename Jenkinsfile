@@ -17,7 +17,7 @@ pipeline {
         stage("prepare version tag") {
             steps {
                 script {
-                    if ("dev".equals(env.BRANCH)) { // todo change to prod
+                    if ("master".equals(env.BRANCH)) {
                         String latestTag = sh(returnStdout: true, script: "git tag --sort=-creatordate | head -n 1").trim()
                         if (latestTag.length() == 0) {
                             env.RELEASE_VERSION_TAG = "1.1.1"
@@ -78,11 +78,11 @@ pipeline {
         stage("docker build image") {
             steps {
                 script {
-                    if ("master".equals(env.BRANCH)) { // todo change to dev
+                    if ("dev".equals(env.BRANCH)) {
                         sh "docker build -t smoke-cloud:dev ."
                     }
 
-                    if ("dev".equals(env.BRANCH)) { // todo change to master
+                    if ("master".equals(env.BRANCH)) {
                         sh "docker build -t smoke-cloud:$RELEASE_VERSION_TAG --build-arg " +
                            "JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG ."
                     }
@@ -102,7 +102,7 @@ pipeline {
                 withCredentials([[$class: "UsernamePasswordMultiBinding", credentialsId: "github",
                                   usernameVariable: "GIT_USERNAME", passwordVariable: "GIT_PASSWORD"]]) {
                     script {
-                        if ("dev".equals(env.BRANCH)) { // todo change to prod
+                        if ("master".equals(env.BRANCH)) {
                             sh "git tag $RELEASE_VERSION_TAG"
                             sh "git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/xaero31/smoke_cloud --tags"
                         }

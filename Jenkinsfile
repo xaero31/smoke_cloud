@@ -99,8 +99,8 @@ pipeline {
 
         stage("push version tag to git") {
             steps {
-                withCredentials($class: "UsernamePasswordMultiBinding", credentialsId: "github",
-                                usernameVariable: "GIT_USERNAME", passwordVariable: "GIT_PASSWORD") {
+                withCredentials([[$class: "UsernamePasswordMultiBinding", credentialsId: "github",
+                                  usernameVariable: "GIT_USERNAME", passwordVariable: "GIT_PASSWORD"]]) {
                     script {
                         if ("dev".equals(env.BRANCH)) { // todo change to prod
                             sh "git tag $RELEASE_VERSION_TAG"

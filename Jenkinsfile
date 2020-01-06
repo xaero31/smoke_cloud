@@ -78,12 +78,11 @@ pipeline {
         stage("docker build image") {
             steps {
                 script {
-                    if ("dev".equals(env.BRANCH)) {
-                        sh "docker build -t smoke-cloud:dev --build-arg " +
-                           "JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG ."
+                    if ("master".equals(env.BRANCH)) { // todo change to dev
+                        sh "docker build -t smoke-cloud:dev ."
                     }
 
-                    if ("master".equals(env.BRANCH)) {
+                    if ("dev".equals(env.BRANCH)) { // todo change to master
                         sh "docker build -t smoke-cloud:$RELEASE_VERSION_TAG --build-arg " +
                            "JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG ."
                     }

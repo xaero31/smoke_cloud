@@ -46,11 +46,12 @@ pipeline {
 
                             env.RELEASE_VERSION_TAG = intVersionParts[0] + "." +
                                                       intVersionParts[1] + "." + intVersionParts[2]
+                            buildName "release: $RELEASE_VERSION_TAG"
                         }
                     } else {
                         String currentDate = new Date().format("yyyy-MM-dd_HH:mm")
                         env.RELEASE_VERSION_TAG = env.GIT_COMMIT.substring(0, 10) + "_" + currentDate
-                        buildName "build:$RELEASE_VERSION_TAG"
+                        buildName "build: $RELEASE_VERSION_TAG"
                     }
                     echo "INFO: prepared $BRANCH tag '$RELEASE_VERSION_TAG'"
                 }

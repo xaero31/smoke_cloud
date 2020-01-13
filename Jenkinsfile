@@ -118,6 +118,12 @@ pipeline {
             junit "build/test-results/test/*.xml"
             sh "docker container prune -f"
             sh "docker image prune -a -f"
+
+            // todo remove after testing
+            emailext attachLog: true,
+            body: "testing email from jenkinsfile",
+            recipientProviders: [developers()],
+            subject: "testing email to developer"
         }
 
         failure {

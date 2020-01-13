@@ -3,7 +3,7 @@ FROM openjdk:8
 MAINTAINER Nikita Ermakov <fontankrovi777@gmail.com>
 
 ARG JAR_NAME
-RUN if ["x$JAR_NAME"="x"]; then export JAR_NAME=smoke-cloud-SNAPSHOT; else echo jar name exists; fi
+RUN if ["x$JAR_NAME"="x"]; then export JAR_NAME=smoke-cloud-SNAPSHOT; fi
 
 WORKDIR /usr/src/app
 

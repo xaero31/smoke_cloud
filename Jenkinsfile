@@ -119,5 +119,23 @@ pipeline {
             sh "docker container prune -f"
             sh "docker image prune -a -f"
         }
+
+        failure {
+            emailext attachLog: true,
+            body: "Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br>
+            Build URL: ${env.BUILD_URL}",
+            recipientProviders: [upstreamDevelopers()],
+            subject: "Build ${env.BUILD_NUMBER} failure. Project - ${env.JOB_NAME}"
+        }
+
+        changed {
+            if (currentBuild.currentResult == "SUCCESS") {
+                emailext attachLog: true,
+                body: "Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br>
+                Build URL: ${env.BUILD_URL}",
+                recipientProviders: [upstreamDevelopers()],
+                subject: "Build ${env.BUILD_NUMBER} success. Project - ${env.JOB_NAME} came back to normal"
+            }
+        }
     }
 }

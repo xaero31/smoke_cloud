@@ -122,7 +122,7 @@ pipeline {
 
         failure {
             emailext attachLog: true,
-            body: "Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br>
+            body: "Project: ${env.JOB_NAME} \nBuild Number: ${env.BUILD_NUMBER} \n
             Build URL: ${env.BUILD_URL}",
             recipientProviders: [upstreamDevelopers()],
             subject: "Build ${env.BUILD_NUMBER} failure. Project - ${env.JOB_NAME}"
@@ -131,7 +131,7 @@ pipeline {
         changed {
             if (currentBuild.currentResult == "SUCCESS") {
                 emailext attachLog: true,
-                body: "Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br>
+                body: "Project: ${env.JOB_NAME} \nBuild Number: ${env.BUILD_NUMBER} \n
                 Build URL: ${env.BUILD_URL}",
                 recipientProviders: [upstreamDevelopers()],
                 subject: "Build ${env.BUILD_NUMBER} success. Project - ${env.JOB_NAME} came back to normal"

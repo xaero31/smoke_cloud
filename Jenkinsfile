@@ -132,7 +132,7 @@ pipeline {
                 if (currentBuild.currentResult == "SUCCESS") {
                     emailext attachLog: true,
                     body: "Project: ${env.JOB_NAME} \nBuild Number: ${env.BUILD_NUMBER} \nBuild URL: ${env.BUILD_URL}",
-                    recipientProviders: [upstreamDevelopers()],
+                    recipientProviders: [developers()],
                     subject: "Build ${env.BUILD_NUMBER} success. Project - ${env.JOB_NAME} came back to normal"
                 }
             }

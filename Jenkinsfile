@@ -1,17 +1,15 @@
 pipeline {
     agent any
 
-    stages {
+    node {
         stage("git checkout") {
-            steps {
-                script {
-                    env.BRANCH = env.GIT_BRANCH.split("/")[1]
-                    env.PROFILE = "master".equals(env.BRANCH) ? "prod" : env.BRANCH
-                }
-                deleteDir()
-                echo "INFO: checkout $BRANCH branch from github"
-                git branch: env.BRANCH, url: "https://github.com/xaero31/smoke_cloud"
-            }
+            env.BRANCH = env.GIT_BRANCH.split("/")[1]
+            env.PROFILE = "master".equals(env.BRANCH) ? "prod" : env.BRANCH
+
+            deleteDir()
+
+            echo "INFO: checkout $BRANCH branch from github"
+            git branch: env.BRANCH, url: "https://github.com/xaero31/smoke_cloud"
         }
 
         stage("prepare version tag") {

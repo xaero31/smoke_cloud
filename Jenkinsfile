@@ -72,9 +72,11 @@ pipeline {
 
         stage("sonarqube analysis") {
             steps {
-                def sonar = tool "sonar_scanner"
-                withSonarQubeEnv("sonar_server") {
-                    sh "$sonar/bin/sonar-scanner"
+                script {
+                    def sonar = tool "sonar_scanner"
+                    withSonarQubeEnv("sonar_server") {
+                        sh "$sonar/bin/sonar-scanner"
+                    }
                 }
             }
         }

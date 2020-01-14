@@ -118,19 +118,13 @@ pipeline {
             junit "build/test-results/test/*.xml"
             sh "docker container prune -f"
             sh "docker image prune -a -f"
-
-            // todo remove after testing
-            emailext attachLog: true,
-            body: "testing email from jenkinsfile",
-            recipientProviders: [developers()],
-            subject: "Build $RELEASE_VERSION_TAG success. Project - $JOB_NAME came back to normal"
         }
 
         failure {
             emailext attachLog: true,
             body: "Project: $JOB_NAME \nBuild: $RELEASE_VERSION_TAG \nBuild URL: $BUILD_URL",
             recipientProviders: [developers()],
-            subject: "Build $RELEASE_VERSION_TAG failure. Project - ${env.JOB_NAME}"
+            subject: "Build $RELEASE_VERSION_TAG failure. Project $JOB_NAME"
         }
 
         changed {
@@ -139,7 +133,7 @@ pipeline {
                     emailext attachLog: true,
                     body: "Project: $JOB_NAME \nBuild: $RELEASE_VERSION_TAG \nBuild URL: $BUILD_URL",
                     recipientProviders: [developers()],
-                    subject: "Build $RELEASE_VERSION_TAG success. Project - $JOB_NAME came back to normal"
+                    subject: "Build $RELEASE_VERSION_TAG success. Project $JOB_NAME came back to normal"
                 }
             }
         }

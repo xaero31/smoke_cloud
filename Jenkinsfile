@@ -123,23 +123,23 @@ pipeline {
             emailext attachLog: true,
             body: "testing email from jenkinsfile",
             recipientProviders: [developers()],
-            subject: "Build ${env.RELEASE_VERSION_TAG} success. Project - ${env.JOB_NAME} came back to normal"
+            subject: "Build $RELEASE_VERSION_TAG success. Project - $JOB_NAME came back to normal"
         }
 
         failure {
             emailext attachLog: true,
-            body: "Project: ${env.JOB_NAME} \nBuild: ${env.RELEASE_VERSION_TAG} \nBuild URL: ${env.BUILD_URL}",
+            body: "Project: $JOB_NAME \nBuild: $RELEASE_VERSION_TAG \nBuild URL: $BUILD_URL",
             recipientProviders: [developers()],
-            subject: "Build ${env.RELEASE_VERSION_TAG} failure. Project - ${env.JOB_NAME}"
+            subject: "Build $RELEASE_VERSION_TAG failure. Project - ${env.JOB_NAME}"
         }
 
         changed {
             script {
                 if (currentBuild.currentResult == "SUCCESS") {
                     emailext attachLog: true,
-                    body: "Project: ${env.JOB_NAME} \nBuild: ${env.RELEASE_VERSION_TAG} \nBuild URL: ${env.BUILD_URL}",
+                    body: "Project: $JOB_NAME \nBuild: $RELEASE_VERSION_TAG \nBuild URL: $BUILD_URL",
                     recipientProviders: [developers()],
-                    subject: "Build ${env.RELEASE_VERSION_TAG} success. Project - ${env.JOB_NAME} came back to normal"
+                    subject: "Build $RELEASE_VERSION_TAG success. Project - $JOB_NAME came back to normal"
                 }
             }
         }

@@ -1,119 +1,123 @@
-node {
-    stage("git checkout") {
-        env.BRANCH = env.GIT_BRANCH.split("/")[1]
-        env.PROFILE = "master".equals(env.BRANCH) ? "prod" : env.BRANCH
+pipeline {
+    agent any
 
-        deleteDir()
+    node {
+        stage("git checkout") {
+            env.BRANCH = env.GIT_BRANCH.split("/")[1]
+            env.PROFILE = "master".equals(env.BRANCH) ? "prod" : env.BRANCH
 
-        echo "INFO: checkout $BRANCH branch from github"
-        git branch: env.BRANCH, url: "https://github.com/xaero31/smoke_cloud"
-    }
+            deleteDir()
 
-    stage("prepare version tag") {
-        if ("master".equals(env.BRANCH)) {
-            String latestTag = sh(returnStdout: true, script: "git tag --sort=-creatordate | head -n 1").trim()
-            if (latestTag.length() == 0) {
-                env.RELEASE_VERSION_TAG = "1.1.1"
-            } else {
-                String[] versionParts = latestTag.split("\\.")
-                int[] intVersionParts = new int[versionParts.length]
-
-                for (int i = 0; i < intVersionParts.length; i++) {
-                    intVersionParts[i] = Integer.parseInt(versionParts[i])
-                }
-
-                switch(env.RELEASE_VERSION) {
-                    case "fix":
-                        intVersionParts[2]++
-                        break
-                    case "minor":
-                        intVersionParts[1]++
-                        intVersionParts[2] = 1
-                        break
-                    case "major":
-                        intVersionParts[0]++
-                        intVersionParts[1] = 1
-                        intVersionParts[2] = 1
-                        break
-                }
-
-                env.RELEASE_VERSION_TAG = intVersionParts[0] + "." + intVersionParts[1] + "." + intVersionParts[2]
-                buildName "release: $RELEASE_VERSION_TAG"
-            }
-        } else {
-            String currentDate = new Date().format("yyyy-MM-dd_HH:mm")
-            env.RELEASE_VERSION_TAG = env.GIT_COMMIT.substring(0, 10) + "_" + currentDate
-            buildName "build: $RELEASE_VERSION_TAG"
-        }
-        echo "INFO: prepared $BRANCH tag '$RELEASE_VERSION_TAG'"
-    }
-
-    stage("unit tests") {
-        sh "./gradlew test --no-daemon"
-    }
-
-    stage("gradle build") {
-        sh "./gradlew clean build --no-daemon"
-    }
-
-    stage("sonarqube analysis") {
-        def sonar = tool "sonar_scanner"
-        withSonarQubeEnv("sonar_server") {
-            sh "$sonar/bin/sonar-scanner"
-        }
-    }
-
-    stage("archive jar") {
-        archiveArtifacts "build/libs/*.jar"
-    }
-
-    stage("docker build image") {
-        if ("dev".equals(env.BRANCH)) {
-            sh "docker build -t smoke-cloud:dev --build-arg JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG ."
+            echo "INFO: checkout $BRANCH branch from github"
+            git branch: env.BRANCH, url: "https://github.com/xaero31/smoke_cloud"
         }
 
-        if ("master".equals(env.BRANCH)) {
-            sh "docker build -t smoke-cloud:$RELEASE_VERSION_TAG --build-arg " +
-               "JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG ."
-        }
-    }
-
-    stage("helm deploy new image") {
-        sh "echo helm deploy step"
-  //              sh "helm upgrade --install --atomic dev-smoke-cloud ./helm/dev --namespace dev" // todo add params later
-    }
-
-    stage("push version tag to git") {
-        withCredentials([[$class: "UsernamePasswordMultiBinding", credentialsId: "github",
-                        usernameVariable: "GIT_USERNAME", passwordVariable: "GIT_PASSWORD"]]) {
+        stage("prepare version tag") {
             if ("master".equals(env.BRANCH)) {
-                sh "git tag $RELEASE_VERSION_TAG"
-                sh "git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/xaero31/smoke_cloud --tags"
+                String latestTag = sh(returnStdout: true, script: "git tag --sort=-creatordate | head -n 1").trim()
+                if (latestTag.length() == 0) {
+                    env.RELEASE_VERSION_TAG = "1.1.1"
+                } else {
+                    String[] versionParts = latestTag.split("\\.")
+                    int[] intVersionParts = new int[versionParts.length]
+
+                    for (int i = 0; i < intVersionParts.length; i++) {
+                        intVersionParts[i] = Integer.parseInt(versionParts[i])
+                    }
+
+                    switch(env.RELEASE_VERSION) {
+                        case "fix":
+                            intVersionParts[2]++
+                            break
+                        case "minor":
+                            intVersionParts[1]++
+                            intVersionParts[2] = 1
+                            break
+                        case "major":
+                            intVersionParts[0]++
+                            intVersionParts[1] = 1
+                            intVersionParts[2] = 1
+                            break
+                    }
+
+                    env.RELEASE_VERSION_TAG = intVersionParts[0] + "." + intVersionParts[1] + "." + intVersionParts[2]
+                    buildName "release: $RELEASE_VERSION_TAG"
+                }
+            } else {
+                String currentDate = new Date().format("yyyy-MM-dd_HH:mm")
+                env.RELEASE_VERSION_TAG = env.GIT_COMMIT.substring(0, 10) + "_" + currentDate
+                buildName "build: $RELEASE_VERSION_TAG"
+            }
+            echo "INFO: prepared $BRANCH tag '$RELEASE_VERSION_TAG'"
+        }
+
+        stage("unit tests") {
+            sh "./gradlew test --no-daemon"
+        }
+
+        stage("gradle build") {
+            sh "./gradlew clean build --no-daemon"
+        }
+
+        stage("sonarqube analysis") {
+            def sonar = tool "sonar_scanner"
+            withSonarQubeEnv("sonar_server") {
+                sh "$sonar/bin/sonar-scanner"
+            }
+        }
+
+        stage("archive jar") {
+            archiveArtifacts "build/libs/*.jar"
+        }
+
+        stage("docker build image") {
+            if ("dev".equals(env.BRANCH)) {
+                sh "docker build -t smoke-cloud:dev --build-arg JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG ."
+            }
+
+            if ("master".equals(env.BRANCH)) {
+                sh "docker build -t smoke-cloud:$RELEASE_VERSION_TAG --build-arg " +
+                   "JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG ."
+            }
+        }
+
+        stage("helm deploy new image") {
+            sh "echo helm deploy step"
+  //              sh "helm upgrade --install --atomic dev-smoke-cloud ./helm/dev --namespace dev" // todo add params later
+        }
+
+        stage("push version tag to git") {
+            withCredentials([[$class: "UsernamePasswordMultiBinding", credentialsId: "github",
+                            usernameVariable: "GIT_USERNAME", passwordVariable: "GIT_PASSWORD"]]) {
+                if ("master".equals(env.BRANCH)) {
+                    sh "git tag $RELEASE_VERSION_TAG"
+                    sh "git push https://$GIT_USERNAME:$GIT_PASSWORD@github.com/xaero31/smoke_cloud --tags"
+                }
             }
         }
     }
-}
 
-post {
-    always {
-        junit "build/test-results/test/*.xml"
-        sh "docker container prune -f"
-        sh "docker image prune -a -f"
-    }
+    post {
+        always {
+            junit "build/test-results/test/*.xml"
+            sh "docker container prune -f"
+            sh "docker image prune -a -f"
+        }
 
-    failure {
-        emailext attachLog: true,
-        body: "Project: $JOB_NAME \nBuild: $RELEASE_VERSION_TAG \nBuild URL: $BUILD_URL",
-        recipientProviders: [developers()],
-        subject: "Build $RELEASE_VERSION_TAG failure. Project $JOB_NAME"
-    }
-
-    changed {
-        if (currentBuild.currentResult == "SUCCESS") {
+        failure {
             emailext attachLog: true,
             body: "Project: $JOB_NAME \nBuild: $RELEASE_VERSION_TAG \nBuild URL: $BUILD_URL",
             recipientProviders: [developers()],
-            subject: "Build $RELEASE_VERSION_TAG success. Project $JOB_NAME came back to normal"
+            subject: "Build $RELEASE_VERSION_TAG failure. Project $JOB_NAME"
+        }
+
+        changed {
+            if (currentBuild.currentResult == "SUCCESS") {
+                emailext attachLog: true,
+                body: "Project: $JOB_NAME \nBuild: $RELEASE_VERSION_TAG \nBuild URL: $BUILD_URL",
+                recipientProviders: [developers()],
+                subject: "Build $RELEASE_VERSION_TAG success. Project $JOB_NAME came back to normal"
+            }
         }
     }
 }

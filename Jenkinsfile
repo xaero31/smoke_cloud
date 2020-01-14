@@ -120,10 +120,7 @@ pipeline {
             sh "docker image prune -a -f"
 
             // todo remove after testing.
-            emailext attachLog: true,
-            body: "testing email from jenkinsfile",
-            recipientProviders: [developers()],
-            subject: "testing email to developer"
+            emailext attachLog: true, recipientProviders: [developers()]
         }
 
         failure {

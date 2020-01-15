@@ -18,12 +18,17 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	runtimeOnly 'com.h2database:h2'
-	runtimeOnly 'org.postgresql:postgresql'
+
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	if (System.getenv('PROFILE') == null || System.getenv('PROFILE') == '') {
+		runtimeOnly 'com.h2database:h2'
+	} else {
+		runtimeOnly 'org.postgresql:postgresql'
+	}
 }
 
 test {

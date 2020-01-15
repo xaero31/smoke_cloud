@@ -93,12 +93,13 @@ pipeline {
             steps {
                 script {
                     if ("dev".equals(env.BRANCH)) {
-                        sh "docker build -t smoke-cloud:dev --build-arg JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG ."
+                        sh "docker build -t smoke-cloud:dev --build-arg JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG " +
+                           "--build-arg PROFILE=$PROFILE ."
                     }
 
                     if ("master".equals(env.BRANCH)) {
                         sh "docker build -t smoke-cloud:$RELEASE_VERSION_TAG --build-arg " +
-                           "JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG ."
+                           "JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG --build-arg PROFILE=$PROFILE ."
                     }
                 }
             }

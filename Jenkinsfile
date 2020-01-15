@@ -75,6 +75,14 @@ pipeline {
             }
         }
 
+        stage("sonarqube quality gate") {
+            steps {
+                timeout(time: 1, unit: "HOURS") {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
         stage("archive jar") {
             steps {
                 archiveArtifacts "build/libs/*.jar"

@@ -58,12 +58,6 @@ pipeline {
             }
         }
 
-        stage("unit tests") {
-            steps {
-                sh "./gradlew test --no-daemon"
-            }
-        }
-
         stage("gradle build") {
             steps {
                 sh "./gradlew clean build --no-daemon"

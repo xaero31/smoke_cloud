@@ -12,8 +12,6 @@ repositories {
 	mavenCentral()
 }
 
-println 'spring profile: \'' + System.getenv('spring_profiles_active') + '\''
-
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -26,9 +24,11 @@ dependencies {
 	}
 	testImplementation 'org.springframework.security:spring-security-test'
 
-	if (System.getenv('spring_profiles_active') == null || System.getenv('spring_profiles_active') == '') {
+	if (System.getenv('spring_profiles_active') == null) {
+		logger.info('Spring profile not specified. Using embedded h2 database')
 		runtimeOnly 'com.h2database:h2'
 	} else {
+		logger.info('Using postgre database')
 		runtimeOnly 'org.postgresql:postgresql'
 	}
 }

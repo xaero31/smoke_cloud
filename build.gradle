@@ -27,8 +27,10 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 
 	if (System.getenv('PROFILE') == null || System.getenv('PROFILE') == '') {
+		logger.info('Profile not specified. Using h2 database')
 		runtimeOnly 'com.h2database:h2'
 	} else {
+		logger.info('Using postgres database')
 		runtimeOnly 'org.postgresql:postgresql'
 	}
 }

@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     env.BRANCH = env.GIT_BRANCH.split("/")[1]
-                    env.PROFILE = "master".equals(env.BRANCH) ? "prod" : env.BRANCH
+                    env.spring_profiles_active = "master".equals(env.BRANCH) ? "prod" : env.BRANCH
                 }
                 deleteDir()
                 echo "INFO: checkout $BRANCH branch from github"
@@ -94,12 +94,12 @@ pipeline {
                 script {
                     if ("dev".equals(env.BRANCH)) {
                         sh "docker build -t smoke-cloud:dev --build-arg JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG " +
-                           "--build-arg PROFILE=$PROFILE ."
+                           "--build-arg spring_profiles_active=$spring_profiles_active ."
                     }
 
                     if ("master".equals(env.BRANCH)) {
                         sh "docker build -t smoke-cloud:$RELEASE_VERSION_TAG --build-arg " +
-                           "JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG --build-arg PROFILE=$PROFILE ."
+                           "JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG --build-arg spring_profiles_active=$spring_profiles_active ."
                     }
                 }
             }

@@ -28,9 +28,11 @@ dependencies {
 
 	if (System.getenv('PROFILE') == null || System.getenv('PROFILE') == '') {
 		logger.info('Profile not specified. Using h2 database')
+		println 'no profile'
 		runtimeOnly 'com.h2database:h2'
 	} else {
 		logger.info('Using postgres database')
+		println 'profile set'
 		runtimeOnly 'org.postgresql:postgresql'
 	}
 }

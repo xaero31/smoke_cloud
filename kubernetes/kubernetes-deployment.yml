@@ -25,5 +25,5 @@ spec:
           value: secretkey
   strategy:
     rollingUpdate:
-      maxUnavailable: 1
+      maxUnavailable: 2
       maxSurge: 1

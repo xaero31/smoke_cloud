@@ -4,8 +4,9 @@ MAINTAINER Nikita Ermakov <fontankrovi777@gmail.com>
 
 ARG JAR_NAME
 ARG spring_profiles_active
+
+ENV JAR_NAME ${JAR_NAME:-smoke-cloud-SNAPSHOT}
 ENV spring_profiles_active $spring_profiles_active
-RUN if ["x$JAR_NAME"="x"]; then export JAR_NAME=smoke-cloud-SNAPSHOT; fi
 
 WORKDIR /usr/src/app
 

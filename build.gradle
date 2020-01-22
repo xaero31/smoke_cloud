@@ -5,7 +5,9 @@ plugins {
 }
 
 group = 'com.ermakov.nikita'
-version = System.getenv('RELEASE_VERSION_TAG') == '' ? 'SNAPSHOT' : System.getenv('RELEASE_VERSION_TAG')
+version = (System.getenv('RELEASE_VERSION_TAG') == null ||
+		   System.getenv('RELEASE_VERSION_TAG') == '') ?
+		  'SNAPSHOT' : System.getenv('RELEASE_VERSION_TAG')
 sourceCompatibility = '1.8'
 
 repositories {
@@ -18,6 +20,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:2.1.2'
 
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

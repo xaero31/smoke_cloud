@@ -46,11 +46,13 @@ pipeline {
 
                             env.RELEASE_VERSION_TAG = intVersionParts[0] + "." +
                                                       intVersionParts[1] + "." + intVersionParts[2]
+                            env.IMAGE_TAG = env.RELEASE_VERSION_TAG
                             buildName "release: $RELEASE_VERSION_TAG"
                         }
                     } else {
                         String currentDate = new Date().format("yyyy-MM-dd_HH:mm")
                         env.RELEASE_VERSION_TAG = env.GIT_COMMIT.substring(0, 10) + "_" + currentDate
+                        env.IMAGE_TAG = "dev"
                         buildName "build: $RELEASE_VERSION_TAG"
                     }
                     echo "INFO: prepared $BRANCH tag '$RELEASE_VERSION_TAG'"
@@ -92,15 +94,9 @@ pipeline {
         stage("docker build image") {
             steps {
                 script {
-                    if ("dev".equals(env.BRANCH)) {
-                        sh "docker build -t smoke-cloud:dev --build-arg JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG " +
-                           "--build-arg spring_profiles_active=$spring_profiles_active ."
-                    }
-
-                    if ("master".equals(env.BRANCH)) {
-                        sh "docker build -t smoke-cloud:$RELEASE_VERSION_TAG --build-arg " +
-                           "JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG --build-arg spring_profiles_active=$spring_profiles_active ."
-                    }
+                    sh "docker build -t smoke-cloud:$IMAGE_TAG " +
+                       "--build-arg JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG " +
+                       "--build-arg spring_profiles_active=$spring_profiles_active ."
                 }
             }
         }

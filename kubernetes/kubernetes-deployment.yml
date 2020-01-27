@@ -20,9 +20,14 @@ spec:
         image: smoke-cloud:dev
         ports:
         - containerPort: 8080
-        env:
-        - name: JASYPT_ENCRYPTOR_PASSWORD
-          value: secretkey
+        volumeMounts:
+        - name: smoke-cloud-secret
+          mountPath: "/etc/secret"
+          readOnly: true
+      volumes:
+      - name: smoke-cloud-secret
+        secret:
+          secretName: smoke-cloud-secret
   strategy:
     rollingUpdate:
       maxUnavailable: 2

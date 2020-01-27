@@ -12,4 +12,4 @@ WORKDIR /usr/src/app
 
 EXPOSE 8080
 COPY build/libs/$JAR_NAME.jar .
-CMD java -jar $JAR_NAME.jar
+CMD java -Djasypt.encryptor.password=$("cat /etc/secret/smoke-cloud-secret") -jar $JAR_NAME.jar

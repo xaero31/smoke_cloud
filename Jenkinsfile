@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     env.BRANCH = env.GIT_BRANCH.split("/")[1]
-                    env.spring_profiles_active = "master".equals(env.BRANCH) ? "prod" : env.BRANCH
+                    env.PROFILE = "master".equals(env.BRANCH) ? "prod" : env.BRANCH
                 }
                 deleteDir()
                 echo "INFO: checkout $BRANCH branch from github"
@@ -62,7 +62,7 @@ pipeline {
 
         stage("gradle build") {
             steps {
-                sh "./gradlew clean build --no-daemon -Dspring.profiles.active="
+                sh "./gradlew clean build --no-daemon"
             }
         }
 
@@ -95,8 +95,7 @@ pipeline {
             steps {
                 script {
                     sh "docker build -t smoke-cloud:$IMAGE_TAG " +
-                       "--build-arg JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG " +
-                       "--build-arg spring_profiles_active=$spring_profiles_active ."
+                       "--build-arg JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG "
                 }
             }
         }
@@ -106,9 +105,9 @@ pipeline {
                 sh "echo helm deploy step"
                 sh "helm upgrade " +
                    "--install " +
-                   "--atomic ${spring_profiles_active}-smoke-cloud " +
+                   "--atomic ${PROFILE}-smoke-cloud " +
                    "--set image.tag=${IMAGE_TAG} " +
-                   "-f ./helm/${spring_profiles_active} ./helm/smoke-cloud"
+                   "-f ./helm/${PROFILE}.yaml ./helm/smoke-cloud"
             }
         }
 

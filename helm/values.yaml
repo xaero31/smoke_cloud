@@ -3,3 +3,5 @@ image:
   tag: latest
 secret:
   suffix: stub
+application:
+  profile: stub

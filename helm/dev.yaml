@@ -2,3 +2,4 @@ image:
   tag: dev
 application:
   suffix: -dev
+  profile: dev

@@ -20,6 +20,9 @@ spec:
         image: smoke-cloud:{{ .Values.image.tag }}
         ports:
         - containerPort: 8080
+        env:
+          - name: spring_profiles_active
+            value: {{ .Values.application.profile }}
         volumeMounts:
         - name: smoke-cloud-secret
           mountPath: "/etc/secret"

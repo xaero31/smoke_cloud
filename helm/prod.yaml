@@ -1,0 +1,3 @@
+application:
+  suffix: -prod
+replicaCount: 2

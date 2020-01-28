@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: smoke-cloud-service
+  name: smoke-cloud{{ .Values.application.suffix }}-service
 spec:
   selector:
-    app: smoke-cloud
+    app: smoke-cloud{{ .Values.application.suffix }}
   ports:
   - protocol: TCP
     port: 8080

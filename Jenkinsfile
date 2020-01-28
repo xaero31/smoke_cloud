@@ -104,7 +104,11 @@ pipeline {
         stage("helm deploy new image") {
             steps {
                 sh "echo helm deploy step"
-  //              sh "helm upgrade --install --atomic dev-smoke-cloud ./helm/dev --namespace dev" // todo add params later
+                sh "helm upgrade " +
+                   "--install " +
+                   "--atomic ${spring_profiles_active}-smoke-cloud " +
+                   "--set image.tag=${IMAGE_TAG} " +
+                   "-f ./helm/${spring_profiles_active} ./helm/smoke-cloud"
             }
         }
 

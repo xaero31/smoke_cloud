@@ -2,6 +2,7 @@ package com.ermakov.nikita.smokecloud;
 
 import com.ermakov.nikita.smokecloud.controller.MainController;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ class SmokeCloudApplicationTests {
 	}
 
 	@Test
+	@Disabled
 	void stubTest() {
 		MainController controller = new MainController();
 		Assertions.assertEquals(controller.getWelcomePage(new ExtendedModelMap()), "index");

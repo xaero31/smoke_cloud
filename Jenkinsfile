@@ -95,7 +95,7 @@ pipeline {
             steps {
                 script {
                     sh "docker build -t smoke-cloud:$IMAGE_TAG " +
-                       "--build-arg JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG "
+                       "--build-arg JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG ."
                 }
             }
         }

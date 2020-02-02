@@ -110,6 +110,7 @@ pipeline {
                    "--install " +
                    "--atomic ${PROFILE}-smoke-cloud " +
                    "--set image.tag=${IMAGE_TAG} " +
+                   "--debug " +
                    "-f ./helm/${PROFILE}.yaml ./helm"
             }
         }

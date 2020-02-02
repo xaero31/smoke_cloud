@@ -105,7 +105,7 @@ pipeline {
                 sh "echo helm deploy step"
                 sh "helm upgrade " +
                    "--install " +
-                   "--atomic ${PROFILE}-smoke-cloud " +
+                   "--atomic smoke-cloud " +
                    "--set image.tag=${IMAGE_TAG} " +
                    "-f ./helm/${PROFILE}.yaml ./helm"
             }

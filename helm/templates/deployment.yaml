@@ -16,21 +16,21 @@ spec:
         app: smoke-cloud{{ .Values.application.suffix }}
     spec:
       containers:
-      - name: smoke-cloud{{ .Values.application.suffix }}
-        image: smoke-cloud:{{ .Values.image.tag }}
-        ports:
-        - containerPort: 8080
-        env:
-          - name: spring_profiles_active
-            value: {{ .Values.application.profile }}
-        volumeMounts:
-        - name: smoke-cloud-secret
-          mountPath: "/etc/secret"
-          readOnly: true
+        - name: smoke-cloud{{ .Values.application.suffix }}
+          image: smoke-cloud:{{ .Values.image.tag }}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: spring_profiles_active
+              value: {{ .Values.application.profile }}
+          volumeMounts:
+            - name: smoke-cloud-secret
+              mountPath: "/etc/secret"
+              readOnly: true
       volumes:
-      - name: smoke-cloud-secret
-        secret:
-          secretName: smoke-cloud-secret{{ .Values.application.suffix }}
+        - name: smoke-cloud-secret
+          secret:
+            secretName: smoke-cloud-secret{{ .Values.application.suffix }}
   strategy:
     rollingUpdate:
       maxUnavailable: 1

@@ -27,6 +27,7 @@ spec:
             - name: smoke-cloud-secret
               mountPath: "/etc/secret"
               readOnly: true
+
       volumes:
         - name: smoke-cloud-secret
           secret:

@@ -103,8 +103,9 @@ pipeline {
         stage("helm deploy new image") {
             steps {
                 sh "echo helm deploy step"
-                sh "kubectl get pods"
-                sh "kubectl get secrets"
+                sh "who"
+//                 sh "kubectl get pods"
+//                 sh "kubectl get secrets"
                 sh "helm template " +
                    "--set image.tag=${IMAGE_TAG} " +
                    "-f ./helm/${PROFILE}.yaml ./helm"

@@ -24,11 +24,11 @@ spec:
             - name: spring_profiles_active
               value: {{ .Values.application.profile }}
           volumeMounts:
-            - name: smoke-cloud-secret
+            - name: smoke-cloud-secret{{ .Values.application.suffix }}
               mountPath: "/etc/secret"
               readOnly: true
       volumes:
-        - name: smoke-cloud-secret
+        - name: smoke-cloud-secret{{ .Values.application.suffix }}
           secret:
             secretName: smoke-cloud-secret{{ .Values.application.suffix }}
   strategy:

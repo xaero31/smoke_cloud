@@ -28,9 +28,9 @@ spec:
               mountPath: "/etc/secret"
               readOnly: true
       volumes:
-        - name: smoke-cloud-secret
+        - name: smoke-cloud-secret{{ .Values.application.suffix }}
           secret:
-            secretName: smoke-cloud-secret{{ .Values.application.suffix }}
+            secretName: smoke-cloud-secret
   strategy:
     rollingUpdate:
       maxUnavailable: 1

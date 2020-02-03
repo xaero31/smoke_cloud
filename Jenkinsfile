@@ -103,6 +103,7 @@ pipeline {
         stage("helm deploy new image") {
             steps {
                 sh "echo helm deploy step"
+                sh "kubectl config view"
                 sh "kubectl get secrets --v=99"
                 sh "helm template " +
                    "--set image.tag=${IMAGE_TAG} " +

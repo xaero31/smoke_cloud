@@ -103,13 +103,9 @@ pipeline {
         stage("helm deploy new image") {
             steps {
                 sh "echo helm deploy step"
-                sh "helm template " +
-                   "--set image.tag=${IMAGE_TAG} " +
-                   "-f ./helm/${PROFILE}.yaml ./helm"
                 sh "helm upgrade " +
                    "--install " +
-                   "--debug " +
-                   "${PROFILE}-smoke-cloud " + // todo add --atomic here
+                   "--atomic ${PROFILE}-smoke-cloud " +
                    "--set image.tag=${IMAGE_TAG} " +
                    "-f ./helm/${PROFILE}.yaml ./helm"
             }

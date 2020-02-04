@@ -103,11 +103,6 @@ pipeline {
         stage("helm deploy new image") {
             steps {
                 sh "echo helm deploy step"
-                sh "kubectl config view"
-                sh "kubectl get secrets"
-                sh "helm template " +
-                   "--set image.tag=${IMAGE_TAG} " +
-                   "-f ./helm/${PROFILE}.yaml ./helm"
                 sh "helm upgrade " +
                    "--install " +
                    "--atomic ${PROFILE}-smoke-cloud " +

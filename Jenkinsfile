@@ -109,7 +109,7 @@ pipeline {
                 sh "helm upgrade " +
                    "--install " +
                    "--debug " +
-                   "--atomic ${PROFILE}-smoke-cloud " +
+                   "${PROFILE}-smoke-cloud " + // todo add --atomic here
                    "--set image.tag=${IMAGE_TAG} " +
                    "-f ./helm/${PROFILE}.yaml ./helm"
             }

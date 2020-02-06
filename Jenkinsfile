@@ -129,8 +129,8 @@ pipeline {
     post {
         always {
             junit "build/test-results/test/*.xml"
-            sh "docker container prune -f"
-            sh "docker image prune -a -f"
+//             sh "docker container prune -f"
+//             sh "docker image prune -a -f"
         }
 
         failure {

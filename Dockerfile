@@ -5,7 +5,7 @@ MAINTAINER Nikita Ermakov <fontankrovi777@gmail.com>
 ARG JAR_NAME
 ENV JAR_NAME ${JAR_NAME:-smoke-cloud-SNAPSHOT}
 
-WORKDIR /
+WORKDIR /home/
 EXPOSE 8080
 
 COPY build/libs/$JAR_NAME.jar .

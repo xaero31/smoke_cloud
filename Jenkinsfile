@@ -94,6 +94,9 @@ pipeline {
         stage("docker build image") {
             steps {
                 script {
+                    sh "docker container prune -f"
+                    sh "docker image prune -a -f"
+
                     sh "docker build -t smoke-cloud:$IMAGE_TAG " +
                        "--build-arg JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG ."
                 }
@@ -129,8 +132,6 @@ pipeline {
     post {
         always {
             junit "build/test-results/test/*.xml"
-            sh "docker container prune -f"
-            sh "docker image prune -a -f"
         }
 
         failure {

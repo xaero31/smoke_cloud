@@ -6,7 +6,7 @@ ARG JAR_NAME
 ENV JAR_NAME ${JAR_NAME:-smoke-cloud-SNAPSHOT}
 
 WORKDIR /home/
+ADD build/libs/$JAR_NAME.jar smoke-cloud.jar
 EXPOSE 8080
 
-COPY build/libs/$JAR_NAME.jar .
-CMD java -jar $JAR_NAME.jar
+CMD [ "java", "-jar", "smoke-cloud.jar" ]

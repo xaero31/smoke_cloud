@@ -11,6 +11,10 @@ version = (System.getenv('RELEASE_VERSION_TAG') == null ||
 		  'SNAPSHOT' : System.getenv('RELEASE_VERSION_TAG')
 sourceCompatibility = '1.8'
 
+springBoot {
+	mainClassName = 'com.epam.ermakov.nikita.smokecloud.SmokeCloudApplication'
+}
+
 repositories {
 	mavenCentral()
 }

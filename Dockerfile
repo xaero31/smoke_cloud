@@ -1,4 +1,4 @@
-FROM openjdk:8
+FROM java:8
 
 MAINTAINER Nikita Ermakov <fontankrovi777@gmail.com>
 

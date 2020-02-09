@@ -11,6 +11,10 @@ version = (System.getenv('RELEASE_VERSION_TAG') == null ||
 		  'SNAPSHOT' : System.getenv('RELEASE_VERSION_TAG')
 sourceCompatibility = '1.8'
 
+println('spring_profiles_active: \'' + System.getenv('spring_profiles_active') + '\'')
+println('RELEASE_VERSION_TAG: \'' + System.getenv('RELEASE_VERSION_TAG') + '\'')
+println('PROFILE: \'' + System.getenv('PROFILE') + '\'')
+
 springBoot {
 	mainClassName = 'com.ermakov.nikita.smokecloud.SmokeCloudApplication'
 }
@@ -32,7 +36,7 @@ dependencies {
 	}
 	testImplementation 'org.springframework.security:spring-security-test'
 
-	if (System.getenv('spring_profiles_active') == null) {
+	if (System.getenv('PROFILE') == null) {
 		logger.info('Spring profile not specified. Using embedded h2 database')
 		runtimeOnly 'com.h2database:h2'
 	} else {

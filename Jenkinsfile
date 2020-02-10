@@ -147,7 +147,7 @@ pipeline {
                     emailext attachLog: true,
                     body: "Project: $JOB_NAME \nBuild: $RELEASE_VERSION_TAG \nBuild URL: $BUILD_URL",
                     recipientProviders: [developers()],
-                    subject: "Build success - $RELEASE_VERSION_TAG. Project $JOB_NAME came back to normal"
+                    subject: "Project $JOB_NAME came back to normal. Build success - $RELEASE_VERSION_TAG."
                 }
             }
         }

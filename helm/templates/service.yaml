@@ -9,4 +9,5 @@ spec:
   - protocol: TCP
     port: 8080
     nodePort: 32002
-  type: NodePort
+  type: ExternalName
+  externalName: 89.223.93.139

@@ -5,9 +5,8 @@ metadata:
 spec:
   selector:
     app: smoke-cloud{{ .Values.application.suffix }}
+  type: NodePort
   ports:
-  - protocol: TCP
-    port: 8080
-    nodePort: 32002
-  type: ExternalName
-  externalName: 89.223.93.139
+    - protocol: TCP
+      port: 8080
+      nodePort: 32002

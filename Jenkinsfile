@@ -141,7 +141,6 @@ pipeline {
             subject: "Build $RELEASE_VERSION_TAG failure. Project $JOB_NAME"
         }
 
-
         changed {
             script {
                 if (currentBuild.currentResult == "SUCCESS") {

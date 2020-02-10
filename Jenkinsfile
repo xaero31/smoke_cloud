@@ -138,7 +138,7 @@ pipeline {
             emailext attachLog: true,
             body: "Project: $JOB_NAME \nBuild: $RELEASE_VERSION_TAG \nBuild URL: $BUILD_URL",
             recipientProviders: [developers()],
-            subject: "Build $RELEASE_VERSION_TAG failure. Project $JOB_NAME"
+            subject: "Build failure - $RELEASE_VERSION_TAG. Project $JOB_NAME"
         }
 
         changed {
@@ -147,7 +147,7 @@ pipeline {
                     emailext attachLog: true,
                     body: "Project: $JOB_NAME \nBuild: $RELEASE_VERSION_TAG \nBuild URL: $BUILD_URL",
                     recipientProviders: [developers()],
-                    subject: "Build $RELEASE_VERSION_TAG success. Project $JOB_NAME came back to normal"
+                    subject: "Build success - $RELEASE_VERSION_TAG. Project $JOB_NAME came back to normal"
                 }
             }
         }

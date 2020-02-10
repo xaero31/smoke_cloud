@@ -14,6 +14,7 @@ pipeline {
             }
         }
 
+
         stage("prepare version tag") {
             steps {
                 script {

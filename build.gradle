@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.ermakov.nikita'
-version = (releaseTag == null || releaseTag == '') ? 'SNAPSHOT' : releaseTag
+version = (project.hasProperty('releaseTag') && project['releaseTag'] != '') ? project['releaseTag'] : 'SNAPSHOT'
 sourceCompatibility = '1.8'
 
 springBoot {
@@ -31,12 +31,12 @@ dependencies {
 	}
 	testImplementation 'org.springframework.security:spring-security-test'
 
-	if (profile == null || profile == '') {
-		logger.info('Spring profile not specified. Using embedded h2 database')
-		runtimeOnly 'com.h2database:h2'
-	} else {
+	if (project.hasProperty('profile') && project['profile'] != '') {
 		logger.info('Using postgre database')
 		runtimeOnly 'org.postgresql:postgresql'
+	} else {
+		logger.info('Spring profile not specified. Using embedded h2 database')
+		runtimeOnly 'com.h2database:h2'
 	}
 }
 

@@ -1,8 +1,8 @@
 plugins {
-	id 'org.springframework.boot' version '2.2.2.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
-	id 'java'
-	id 'jacoco'
+    id 'org.springframework.boot' version '2.2.2.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java'
+    id 'jacoco'
 }
 
 group = 'com.ermakov.nikita'
@@ -10,44 +10,48 @@ version = (project.hasProperty('releaseTag') && project['releaseTag'] != '') ? p
 sourceCompatibility = '1.8'
 
 springBoot {
-	mainClassName = 'com.ermakov.nikita.smokecloud.SmokeCloudApplication'
+    mainClassName = 'com.ermakov.nikita.smokecloud.SmokeCloudApplication'
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:2.1.2'
-//	implementation 'org.liquibase:liquibase-core:3.8.6'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:2.1.2'
+    //    implementation 'org.liquibase:liquibase-core:3.8.6'
 //	implementation 'org.yaml:snakeyaml:1.25'
 
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
-	testImplementation 'org.springframework.security:spring-security-test'
+    implementation project(':security')
 
-	runtimeOnly 'org.postgresql:postgresql'
-	if (!project.hasProperty('profile') || !project['profile'].equals('prod')) {
-		runtimeOnly 'com.h2database:h2'
-	}
+    runtimeOnly 'org.postgresql:postgresql'
+    if (!project.hasProperty('profile') || !project['profile'].equals('prod')) {
+        runtimeOnly 'com.h2database:h2'
+    }
+
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 jacocoTestReport {
-	reports {
-		xml.enabled true
-	}
+    reports {
+        xml.enabled true
+    }
 }
 
 check {
-	dependsOn jacocoTestReport
+    dependsOn jacocoTestReport
 }

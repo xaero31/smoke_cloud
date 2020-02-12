@@ -5,7 +5,6 @@ plugins {
 }
 
 group 'com.ermakov.nikita'
-version 'SNAPSHOT'
 
 sourceCompatibility = 1.8
 

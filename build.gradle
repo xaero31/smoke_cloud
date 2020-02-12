@@ -32,11 +32,8 @@ dependencies {
 	}
 	testImplementation 'org.springframework.security:spring-security-test'
 
-	if (project.hasProperty('profile') && project['profile'] != '') {
-		logger.info('Using postgre database')
-		runtimeOnly 'org.postgresql:postgresql'
-	} else {
-		logger.info('Spring profile not specified. Using embedded h2 database')
+	runtimeOnly 'org.postgresql:postgresql'
+	if (!project.hasProperty('profile') || !project['profile'].equals('prod')) {
 		runtimeOnly 'com.h2database:h2'
 	}
 }

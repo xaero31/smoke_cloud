@@ -2,3 +2,5 @@ replicaCount: 2
 application:
   suffix: -prod
   profile: prod
+  ip:
+    number: 3

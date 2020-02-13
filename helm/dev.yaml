@@ -3,3 +3,5 @@ image:
 application:
   suffix: -dev
   profile: dev
+  ip:
+    number: 2

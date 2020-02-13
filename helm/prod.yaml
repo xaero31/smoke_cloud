@@ -1,4 +1,3 @@
-replicaCount: 2
 application:
   suffix: -prod
   profile: prod

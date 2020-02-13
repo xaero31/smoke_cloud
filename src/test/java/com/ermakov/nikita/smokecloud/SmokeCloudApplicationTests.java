@@ -8,8 +8,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = MainController.class)
 @ExtendWith(SpringExtension.class)
@@ -21,13 +23,14 @@ class SmokeCloudApplicationTests {
 	@Test
 	@WithUserDetails("user")
 	void authenticatedMainControllerRequest_ReturnsOk() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/welcome"))
-				.andExpect(MockMvcResultMatchers.status().isOk());
+		mockMvc.perform(get("/welcome"))
+				.andExpect(status().isOk());
 	}
 
 	@Test
-	void notAuthenticatedMainControllerRequest_ReturnsNotAuthorized() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/welcome"))
-				.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+	void notAuthenticatedMainControllerRequest_RedirectToLogin() throws Exception {
+		mockMvc.perform(get("/welcome"))
+				.andExpect(status().isFound())
+				.andExpect(redirectedUrl("http://localhost/login"));
 	}
 }

@@ -10,5 +10,3 @@ spec:
     - protocol: TCP
       port: 8080
       nodePort: 32002
-  externalIPs:
-    - 89.223.93.139

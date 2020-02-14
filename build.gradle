@@ -27,6 +27,7 @@ dependencies {
 //	implementation 'org.yaml:snakeyaml:1.25'
 
     implementation project(':security')
+    implementation project(':controller')
 
     runtimeOnly 'org.postgresql:postgresql'
     if (!project.hasProperty('profile') || !project['profile'].equals('prod')) {
@@ -34,11 +35,6 @@ dependencies {
     }
 
     compileOnly 'org.projectlombok:lombok:1.18.12'
-
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
-    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 test {

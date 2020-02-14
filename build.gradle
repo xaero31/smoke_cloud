@@ -35,18 +35,26 @@ dependencies {
     }
 
     compileOnly 'org.projectlombok:lombok:1.18.12'
-}
 
-test {
-    useJUnitPlatform()
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled true
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+    testImplementation 'org.springframework.security:spring-security-test'
+    testCompile 'junit:junit:4.12'
 }
 
-check {
-    dependsOn jacocoTestReport
+allprojects {
+    test {
+        useJUnitPlatform()
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+        }
+    }
+
+    check {
+        dependsOn jacocoTestReport
+    }
 }

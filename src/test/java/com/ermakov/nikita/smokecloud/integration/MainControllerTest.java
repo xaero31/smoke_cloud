@@ -1,4 +1,4 @@
-package com.ermakov.nikita.smokecloud;
+package com.ermakov.nikita.smokecloud.integration;
 
 import com.ermakov.nikita.smokecloud.controller.MainController;
 import org.junit.jupiter.api.Test;
@@ -15,14 +15,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = MainController.class)
 @ExtendWith(SpringExtension.class)
-class SmokeCloudApplicationTests {
+class MainControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
 
 	@Test
 	@WithUserDetails("user")
-	void authenticatedMainControllerRequest_ReturnsOk() throws Exception {
+	void welcomePageTest() throws Exception {
 		mockMvc.perform(get("/welcome"))
 				.andExpect(status().isOk());
 	}

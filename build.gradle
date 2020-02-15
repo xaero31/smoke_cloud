@@ -5,6 +5,10 @@ plugins {
     id 'jacoco'
 }
 
+group = 'com.ermakov.nikita'
+version = (project.hasProperty('releaseTag') && project['releaseTag'] != '') ? project['releaseTag'] : 'SNAPSHOT'
+sourceCompatibility = '1.8'
+
 springBoot {
     mainClassName = 'com.ermakov.nikita.smokecloud.SmokeCloudApplication'
 }
@@ -18,7 +22,7 @@ dependencies {
     //    implementation 'org.liquibase:liquibase-core:3.8.6'
 //	implementation 'org.yaml:snakeyaml:1.25'
 
-    implementation project(':security')
+    implementation project(':security:')
     implementation project(':controller')
 
     runtimeOnly 'org.postgresql:postgresql'
@@ -28,10 +32,6 @@ dependencies {
 }
 
 allprojects {
-    group = 'com.ermakov.nikita'
-    version = (project.hasProperty('releaseTag') && project['releaseTag'] != '') ? project['releaseTag'] : 'SNAPSHOT'
-    sourceCompatibility = '1.8'
-
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'jacoco'
@@ -67,6 +67,10 @@ allprojects {
 }
 
 subprojects {
+    group = 'com.ermakov.nikita'
+    version = (project.hasProperty('releaseTag') && project['releaseTag'] != '') ? project['releaseTag'] : 'SNAPSHOT'
+    sourceCompatibility = '1.8'
+
     bootJar {
         enabled = false
     }

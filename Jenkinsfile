@@ -50,7 +50,7 @@ pipeline {
                             buildName "release: $RELEASE_VERSION_TAG"
                         }
                     } else {
-                        String currentDate = new Date().format("yyyy-MM-dd_HH:mm")
+                        String currentDate = new Date().format("yyyy-MM-dd_HH-mm")
                         env.RELEASE_VERSION_TAG = env.GIT_COMMIT.substring(0, 10) + "_" + currentDate
                         env.IMAGE_TAG = "dev"
                         buildName "build: $RELEASE_VERSION_TAG"

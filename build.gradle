@@ -22,8 +22,10 @@ dependencies {
     //    implementation 'org.liquibase:liquibase-core:3.8.6'
 //	implementation 'org.yaml:snakeyaml:1.25'
 
-    implementation project(':security:')
+    implementation project(':security')
     implementation project(':controller')
+
+    testImplementation project(':controller')
 
     runtimeOnly 'org.postgresql:postgresql'
     if (!project.hasProperty('profile') || !project['profile'].equals('prod')) {

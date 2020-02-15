@@ -5,16 +5,8 @@ plugins {
     id 'jacoco'
 }
 
-group = 'com.ermakov.nikita'
-version = (project.hasProperty('releaseTag') && project['releaseTag'] != '') ? project['releaseTag'] : 'SNAPSHOT'
-sourceCompatibility = '1.8'
-
 springBoot {
     mainClassName = 'com.ermakov.nikita.smokecloud.SmokeCloudApplication'
-}
-
-repositories {
-    mavenCentral()
 }
 
 dependencies {
@@ -33,26 +25,53 @@ dependencies {
     if (!project.hasProperty('profile') || !project['profile'].equals('prod')) {
         runtimeOnly 'com.h2database:h2'
     }
+}
 
-    compileOnly 'org.projectlombok:lombok:1.18.12'
+allprojects {
+    group = 'com.ermakov.nikita'
+    version = (project.hasProperty('releaseTag') && project['releaseTag'] != '') ? project['releaseTag'] : 'SNAPSHOT'
+    sourceCompatibility = '1.8'
 
-    testImplementation 'org.mockito:mockito-core:2.10.0'
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'jacoco'
+    apply plugin: 'java'
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok:1.18.12'
+
+        testImplementation 'org.mockito:mockito-core:2.10.0'
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+        testImplementation 'org.springframework.security:spring-security-test'
     }
-    testImplementation 'org.springframework.security:spring-security-test'
-}
 
-test {
-    useJUnitPlatform()
-}
+    repositories {
+        mavenCentral()
+    }
 
-jacocoTestReport {
-    reports {
-        xml.enabled true
+    test {
+        useJUnitPlatform()
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+        }
+    }
+
+    check {
+        dependsOn jacocoTestReport
     }
 }
 
-check {
-    dependsOn jacocoTestReport
+subprojects {
+    bootJar {
+        enabled = false
+    }
+
+    jar {
+        enabled = true
+    }
 }

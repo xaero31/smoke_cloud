@@ -1,3 +1,6 @@
 rootProject.name = 'smoke-cloud'
 include 'security'
 include 'controller'
+include 'model'
+include 'database'
+

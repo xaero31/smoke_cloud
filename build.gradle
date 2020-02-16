@@ -19,11 +19,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:2.1.2'
-    //    implementation 'org.liquibase:liquibase-core:3.8.6'
-//	implementation 'org.yaml:snakeyaml:1.25'
+    implementation 'org.liquibase:liquibase-core:3.8.6'
+	implementation 'org.yaml:snakeyaml:1.25'
 
+    implementation project(':model')
     implementation project(':security')
     implementation project(':controller')
+    implementation project(':database')
 
     testImplementation project(':controller')
 

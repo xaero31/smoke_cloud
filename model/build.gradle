@@ -1,0 +1,13 @@
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compileOnly 'org.hibernate:hibernate-jpamodelgen'
+
+    annotationProcessor 'org.hibernate:hibernate-jpamodelgen'
+    annotationProcessor 'org.projectlombok:lombok'
+}
+
+sourceSets.configureEach { sourceSet ->
+    tasks.named(sourceSet.compileJavaTaskName).configure {
+        options.annotationProcessorGeneratedSourcesDirectory = file("$buildDir/generated/src/main/java")
+    }
+}

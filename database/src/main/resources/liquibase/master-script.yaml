@@ -1,4 +1,4 @@
 databaseChangeLog:
   - include:
-    relativeToChangelogFile: true
-    file: add-spring-security-using-database.yaml
+      relativeToChangelogFile: true
+      file: add-spring-security-using-database.yaml

@@ -46,13 +46,11 @@ pipeline {
 
                             env.RELEASE_VERSION_TAG = intVersionParts[0] + "." +
                                                       intVersionParts[1] + "." + intVersionParts[2]
-                            env.IMAGE_TAG = env.RELEASE_VERSION_TAG
                             buildName "release: $RELEASE_VERSION_TAG"
                         }
                     } else {
                         String currentDate = new Date().format("yyyy-MM-dd_HH-mm")
                         env.RELEASE_VERSION_TAG = env.GIT_COMMIT.substring(0, 10) + "_" + currentDate
-                        env.IMAGE_TAG = "dev"
                         buildName "build: $RELEASE_VERSION_TAG"
                     }
                     echo "INFO: prepared $BRANCH tag '$RELEASE_VERSION_TAG'"
@@ -97,7 +95,7 @@ pipeline {
                     sh "docker container prune -f"
                     sh "docker image prune -a -f"
 
-                    sh "docker build -t smoke-cloud:$IMAGE_TAG " +
+                    sh "docker build -t smoke-cloud:$RELEASE_VERSION_TAG " +
                        "--build-arg JAR_NAME=smoke-cloud-$RELEASE_VERSION_TAG ."
                 }
             }
@@ -109,7 +107,7 @@ pipeline {
                 sh "helm upgrade " +
                    "--install " +
                    "--atomic ${PROFILE}-smoke-cloud " +
-                   "--set image.tag=${IMAGE_TAG} " +
+                   "--set image.tag=${RELEASE_VERSION_TAG} " +
                    "-f ./helm/${PROFILE}.yaml ./helm"
             }
         }

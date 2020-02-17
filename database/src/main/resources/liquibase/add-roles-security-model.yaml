@@ -95,7 +95,7 @@ databaseChangeLog:
         - onFail: CONTINUE
         - sqlCheck:
             expectedResult: 0
-            sql: SELECT COUNT(*) FROM `roles` WHERE `name` = 'USER'
+            sql: SELECT COUNT(*) FROM roles WHERE name = 'USER'
       changes:
         - insert:
             tableName: roles
@@ -111,7 +111,7 @@ databaseChangeLog:
         - onFail: CONTINUE
         - sqlCheck:
             expectedResult: 0
-            sql: SELECT COUNT(*) FROM `privileges` WHERE `name` = 'READ'
+            sql: SELECT COUNT(*) FROM privileges WHERE name = 'READ'
       changes:
         - insert:
             tableName: privileges
@@ -127,7 +127,7 @@ databaseChangeLog:
         - onFail: CONTINUE
         - sqlCheck:
             expectedResult: 0
-            sql: SELECT COUNT(*) FROM `privileges` WHERE `name` = 'WRITE'
+            sql: SELECT COUNT(*) FROM privileges WHERE name = 'WRITE'
       changes:
         - insert:
             tableName: privileges
@@ -144,14 +144,14 @@ databaseChangeLog:
         - sqlCheck:
             expectedResult: 0
             sql: >-
-              SELECT COUNT(*) FROM `roles_privileges`
-              WHERE `role_id` = (SELECT `id` FROM `roles` WHERE `name` = 'USER')
-              AND `privilege_id` = (SELECT `id` FROM `privileges` WHERE `name` = 'READ')
+              SELECT COUNT(*) FROM roles_privileges
+              WHERE role_id = (SELECT id FROM roles WHERE name = 'USER')
+              AND privilege_id = (SELECT id FROM privileges WHERE name = 'READ')
       changes:
         sql: >-
-          INSERT INTO `roles_privileges` (`role_id`, `privilege_id`) VALUES (
-          SELECT `id` FROM `roles` WHERE `name` = 'USER',
-          SELECT `id` FROM `privileges` WHERE `name` = 'READ')
+          INSERT INTO roles_privileges (role_id, privilege_id) VALUES (
+          SELECT id FROM roles WHERE name = 'USER',
+          SELECT id FROM privileges WHERE name = 'READ')
   - changeSet:
       id: setWritePrivilegeToUserRole
       author: xaero
@@ -161,23 +161,23 @@ databaseChangeLog:
         - sqlCheck:
             expectedResult: 0
             sql: >-
-              SELECT COUNT(*) FROM `roles_privileges`
-              WHERE `role_id` = (SELECT `id` FROM `roles` WHERE `name` = 'USER')
-              AND `privilege_id` = (SELECT `id` FROM `privileges` WHERE `name` = 'WRITE')
+              SELECT COUNT(*) FROM roles_privileges
+              WHERE role_id = (SELECT id FROM roles WHERE name = 'USER')
+              AND privilege_id = (SELECT id FROM privileges WHERE name = 'WRITE')
       changes:
         sql: >-
-          INSERT INTO `roles_privileges` (`role_id`, `privilege_id`) VALUES (
-          SELECT `id` FROM `roles` WHERE `name` = 'USER',
-          SELECT `id` FROM `privileges` WHERE `name` = 'WRITE')
+          INSERT INTO roles_privileges (role_id, privilege_id) VALUES (
+          SELECT id FROM roles WHERE name = 'USER',
+          SELECT id FROM privileges WHERE name = 'WRITE')
   - changeSet:
       id: setRoleToTestUser
       author: xaero
       context: embeddedDB
       changes:
         sql: >-
-          INSERT INTO `users_roles` (`user_id`, `role_id`) VALUES (
-          SELECT `id` FROM `users` WHERE `username` = 'testuser',
-          SELECT `id` FROM `roles` WHERE `name` = 'USER')
+          INSERT INTO users_roles (user_id, role_id) VALUES (
+          SELECT id FROM users WHERE username = 'testuser',
+          SELECT id FROM roles WHERE name = 'USER')
   - changeSet:
       id: addUserStatusColumns
       author: xaero

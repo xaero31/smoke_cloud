@@ -1,16 +1,16 @@
 package com.ermakov.nikita.security.repository;
 
+import com.ermakov.nikita.model.security.Role;
 import com.ermakov.nikita.model.security.User;
-import com.ermakov.nikita.model.security.User_;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.jpa.QueryHints;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import java.util.List;
 
 /**
  * created by Nikita_Ermakov at 2/16/2020
@@ -19,6 +19,12 @@ import javax.persistence.criteria.Root;
 @Repository
 public class UserRepository {
 
+    @Value("${user.repository.find.by.username.query}")
+    private String findByUsernameQuery;
+
+    @Value("${user.repository.fetch.roles.privileges.query}")
+    private String fetchPrivilegesQuery;
+
     private EntityManager em;
 
     public UserRepository(@Autowired EntityManager em) {
@@ -26,15 +32,19 @@ public class UserRepository {
     }
 
     public User findByUsername(String username) {
-        final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        final CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
-        final Root<User> userRoot = criteriaQuery.from(User.class);
-
-        criteriaQuery.select(userRoot);
-        criteriaQuery.where(criteriaBuilder.equal(userRoot.get(User_.USERNAME), username));
-
         try {
-            return em.createQuery(criteriaQuery).getSingleResult();
+            final User user = em.createQuery(findByUsernameQuery, User.class)
+                    .setParameter(1, username)
+                    .setHint(QueryHints.HINT_PASS_DISTINCT_THROUGH, false)
+                    .getSingleResult();
+            final List<Role> fetchedPrivilegesRoles = em.createQuery(fetchPrivilegesQuery, Role.class)
+                    .setParameter(1, user.getRoles())
+                    .setHint(QueryHints.HINT_PASS_DISTINCT_THROUGH, false)
+                    .getResultList();
+            user.setRoles(fetchedPrivilegesRoles);
+
+            log.info("Found user {}", username);
+            return user;
         } catch (NoResultException e) {
             log.info("Not found user with username {}", username);
             return null;

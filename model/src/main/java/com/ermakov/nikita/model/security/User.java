@@ -32,4 +32,16 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
     private Collection<Role> roles;
+
+    @Column(name = "non_expired", nullable = false)
+    private boolean nonExpired;
+
+    @Column(name = "non_locked", nullable = false)
+    private boolean nonLocked;
+
+    @Column(name = "credentials_non_expired", nullable = false)
+    private boolean credentialsNonExpired;
+
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled;
 }

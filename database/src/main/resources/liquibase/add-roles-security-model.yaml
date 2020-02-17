@@ -178,3 +178,34 @@ databaseChangeLog:
           INSERT INTO `users_roles` (`user_id`, `role_id`) VALUES (
           SELECT `id` FROM `users` WHERE `username` = 'testuser',
           SELECT `id` FROM `roles` WHERE `name` = 'USER')
+  - changeSet:
+      id: addUserStatusColumns
+      author: xaero
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: non_expired
+                  type: boolean
+                  defaultValue: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: non_locked
+                  type: boolean
+                  defaultValue: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: credentials_non_expired
+                  type: boolean
+                  defaultValue: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: enabled
+                  type: boolean
+                  defaultValue: true
+                  constraints:
+                    nullable: false

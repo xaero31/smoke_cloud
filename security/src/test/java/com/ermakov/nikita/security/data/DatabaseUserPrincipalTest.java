@@ -16,6 +16,10 @@ public class DatabaseUserPrincipalTest {
         final User user = new User();
         user.setUsername("username");
         user.setPassword("password");
+        user.setNonExpired(true);
+        user.setNonLocked(true);
+        user.setCredentialsNonExpired(true);
+        user.setEnabled(true);
         databaseUserPrincipal = new DatabaseUserPrincipal(user);
     }
 

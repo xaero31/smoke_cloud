@@ -4,7 +4,7 @@ plugins {
     id 'java'
     id 'jacoco'
 }
-
+// add comment
 group = 'com.ermakov.nikita'
 version = (project.hasProperty('releaseTag') && project['releaseTag'] != '') ? project['releaseTag'] : 'SNAPSHOT'
 sourceCompatibility = '1.8'

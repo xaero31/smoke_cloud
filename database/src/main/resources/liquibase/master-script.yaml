@@ -2,3 +2,6 @@ databaseChangeLog:
   - include:
       relativeToChangelogFile: true
       file: add-spring-security-using-database.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: add-roles-security-model.yaml

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -8,8 +8,10 @@
     <title>Document</title>
 </head>
 <body>
+<h1 sec:authorize="hasAuthority('READ')">Header for readers only</h1>
+<br>
 <h1>Welcome to application!</h1>
-<br/>
+<br>
 <h1>Unknown user</h1>
 </body>
 </html>

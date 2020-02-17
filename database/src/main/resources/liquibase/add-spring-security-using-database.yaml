@@ -9,6 +9,7 @@ databaseChangeLog:
               - column:
                   name: id
                   type: bigint
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -33,6 +34,7 @@ databaseChangeLog:
               - column:
                   name: id
                   type: bigint
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -74,9 +76,6 @@ databaseChangeLog:
         - insert:
             tableName: users
             columns:
-              - column:
-                  name: id
-                  value: 1
               - column:
                   name: username
                   value: testuser

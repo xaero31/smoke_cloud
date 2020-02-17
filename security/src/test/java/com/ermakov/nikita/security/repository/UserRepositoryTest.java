@@ -1,5 +1,6 @@
 package com.ermakov.nikita.security.repository;
 
+import com.ermakov.nikita.model.security.Role;
 import com.ermakov.nikita.model.security.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,14 +11,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,27 +25,17 @@ public class UserRepositoryTest {
     private EntityManager entityManager;
 
     @Mock
-    private CriteriaBuilder criteriaBuilder;
-
-    @Mock
-    private CriteriaQuery<User> criteriaQuery;
-
-    @Mock
-    private Root<User> userRoot;
-
-    @Mock
-    private TypedQuery<User> typedQuery;
+    @SuppressWarnings("rawtypes")
+    private TypedQuery typedQuery;
 
     private UserRepository userRepository;
 
     @BeforeEach
     @SuppressWarnings("unchecked")
     void before() {
-        when(entityManager.getCriteriaBuilder()).thenReturn(criteriaBuilder);
-        when(criteriaBuilder.createQuery(User.class)).thenReturn(criteriaQuery);
-        when(criteriaQuery.from(User.class)).thenReturn(userRoot);
-        when(userRoot.get(anyString())).thenReturn(null);
-        when(entityManager.createQuery(any(CriteriaQuery.class))).thenReturn(typedQuery);
+        when(entityManager.createQuery(anyString(), any())).thenReturn(typedQuery);
+        when(typedQuery.setParameter(anyInt(), any())).thenReturn(typedQuery);
+        when(typedQuery.setHint(anyString(), anyBoolean())).thenReturn(typedQuery);
         userRepository = new UserRepository(entityManager);
     }
 
@@ -61,6 +49,7 @@ public class UserRepositoryTest {
     void whenFoundUser_returnUserObject() {
         final User user = new User();
         when(typedQuery.getSingleResult()).thenReturn(user);
+        when(typedQuery.getResultList()).thenReturn(Collections.singletonList(new Role()));
         assertSame(user, userRepository.findByUsername("username"));
     }
 }

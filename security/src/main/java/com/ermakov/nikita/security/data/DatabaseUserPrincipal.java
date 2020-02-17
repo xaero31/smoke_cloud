@@ -1,10 +1,15 @@
 package com.ermakov.nikita.security.data;
 
+import com.ermakov.nikita.model.security.Privilege;
 import com.ermakov.nikita.model.security.User;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * created by Nikita_Ermakov at 2/16/2020
@@ -19,7 +24,15 @@ public class DatabaseUserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        if (user.getRoles() == null) {
+            return Collections.emptyList();
+        }
+
+        return user.getRoles().stream()
+                .flatMap(role -> role.getPrivileges() != null ? role.getPrivileges().stream() : Stream.empty())
+                .map(Privilege::getName)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -34,21 +47,21 @@ public class DatabaseUserPrincipal implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return user.isNonExpired();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return user.isNonLocked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return user.isCredentialsNonExpired();
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.isEnabled();
     }
 }

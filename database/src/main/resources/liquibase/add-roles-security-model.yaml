@@ -1,0 +1,211 @@
+databaseChangeLog:
+  - changeSet:
+      id: addRolesTable
+      author: xaero
+      changes:
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                    unique: true
+  - changeSet:
+      id: addPrivilegesTable
+      author: xaero
+      changes:
+        - createTable:
+            tableName: privileges
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(40)
+                  constraints:
+                    nullable: false
+                    unique: true
+  - changeSet:
+      id: addUsersRolesTable
+      author: xaero
+      changes:
+        - createTable:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: addRolesPrivilegesTable
+      author: xaero
+      changes:
+        - createTable:
+            tableName: roles_privileges
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: role_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: privilege_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: insertUserRole
+      author: xaero
+      runAlways: true
+      preConditions:
+        - onFail: CONTINUE
+        - sqlCheck:
+            expectedResult: 0
+            sql: SELECT COUNT(*) FROM `roles` WHERE `name` = 'USER'
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: USER
+  - changeSet:
+      id: insertReadPrivilege
+      author: xaero
+      runAlways: true
+      preConditions:
+        - onFail: CONTINUE
+        - sqlCheck:
+            expectedResult: 0
+            sql: SELECT COUNT(*) FROM `privileges` WHERE `name` = 'READ'
+      changes:
+        - insert:
+            tableName: privileges
+            columns:
+              - column:
+                  name: name
+                  value: READ
+  - changeSet:
+      id: insertWritePrivilege
+      author: xaero
+      runAlways: true
+      preConditions:
+        - onFail: CONTINUE
+        - sqlCheck:
+            expectedResult: 0
+            sql: SELECT COUNT(*) FROM `privileges` WHERE `name` = 'WRITE'
+      changes:
+        - insert:
+            tableName: privileges
+            columns:
+              - column:
+                  name: name
+                  value: WRITE
+  - changeSet:
+      id: setReadPrivilegeToUserRole
+      author: xaero
+      runAlways: true
+      preConditions:
+        - onFail: CONTINUE
+        - sqlCheck:
+            expectedResult: 0
+            sql: >-
+              SELECT COUNT(*) FROM `roles_privileges`
+              WHERE `role_id` = (SELECT `id` FROM `roles` WHERE `name` = 'USER')
+              AND `privilege_id` = (SELECT `id` FROM `privileges` WHERE `name` = 'READ')
+      changes:
+        sql: >-
+          INSERT INTO `roles_privileges` (`role_id`, `privilege_id`) VALUES (
+          SELECT `id` FROM `roles` WHERE `name` = 'USER',
+          SELECT `id` FROM `privileges` WHERE `name` = 'READ')
+  - changeSet:
+      id: setWritePrivilegeToUserRole
+      author: xaero
+      runAlways: true
+      preConditions:
+        - onFail: CONTINUE
+        - sqlCheck:
+            expectedResult: 0
+            sql: >-
+              SELECT COUNT(*) FROM `roles_privileges`
+              WHERE `role_id` = (SELECT `id` FROM `roles` WHERE `name` = 'USER')
+              AND `privilege_id` = (SELECT `id` FROM `privileges` WHERE `name` = 'WRITE')
+      changes:
+        sql: >-
+          INSERT INTO `roles_privileges` (`role_id`, `privilege_id`) VALUES (
+          SELECT `id` FROM `roles` WHERE `name` = 'USER',
+          SELECT `id` FROM `privileges` WHERE `name` = 'WRITE')
+  - changeSet:
+      id: setRoleToTestUser
+      author: xaero
+      context: embeddedDB
+      changes:
+        sql: >-
+          INSERT INTO `users_roles` (`user_id`, `role_id`) VALUES (
+          SELECT `id` FROM `users` WHERE `username` = 'testuser',
+          SELECT `id` FROM `roles` WHERE `name` = 'USER')
+  - changeSet:
+      id: addUserStatusColumns
+      author: xaero
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: non_expired
+                  type: boolean
+                  defaultValue: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: non_locked
+                  type: boolean
+                  defaultValue: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: credentials_non_expired
+                  type: boolean
+                  defaultValue: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: enabled
+                  type: boolean
+                  defaultValue: true
+                  constraints:
+                    nullable: false

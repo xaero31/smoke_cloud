@@ -20,10 +20,10 @@ import java.util.List;
 public class UserRepository {
 
     @Value("${user.repository.find.by.username.query}")
-    private String findByUsernameQuery;
+    private String findByUsernameQuery = "";
 
     @Value("${user.repository.fetch.roles.privileges.query}")
-    private String fetchPrivilegesQuery;
+    private String fetchPrivilegesQuery = "";
 
     private EntityManager em;
 

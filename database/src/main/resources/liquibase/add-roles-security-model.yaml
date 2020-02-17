@@ -150,8 +150,8 @@ databaseChangeLog:
       changes:
         sql: >-
           INSERT INTO roles_privileges (role_id, privilege_id) VALUES (
-          SELECT id FROM roles WHERE name = 'USER',
-          SELECT id FROM privileges WHERE name = 'READ')
+          (SELECT id FROM roles WHERE name = 'USER'),
+          (SELECT id FROM privileges WHERE name = 'READ'))
   - changeSet:
       id: setWritePrivilegeToUserRole
       author: xaero
@@ -167,8 +167,8 @@ databaseChangeLog:
       changes:
         sql: >-
           INSERT INTO roles_privileges (role_id, privilege_id) VALUES (
-          SELECT id FROM roles WHERE name = 'USER',
-          SELECT id FROM privileges WHERE name = 'WRITE')
+          (SELECT id FROM roles WHERE name = 'USER'),
+          (SELECT id FROM privileges WHERE name = 'WRITE'))
   - changeSet:
       id: setRoleToTestUser
       author: xaero
@@ -176,8 +176,8 @@ databaseChangeLog:
       changes:
         sql: >-
           INSERT INTO users_roles (user_id, role_id) VALUES (
-          SELECT id FROM users WHERE username = 'testuser',
-          SELECT id FROM roles WHERE name = 'USER')
+          (SELECT id FROM users WHERE username = 'testuser'),
+          (SELECT id FROM roles WHERE name = 'USER'))
   - changeSet:
       id: addUserStatusColumns
       author: xaero

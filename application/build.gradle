@@ -1,0 +1,15 @@
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter'
+
+    implementation project(':model')
+    implementation project(':security')
+    implementation project(':controller')
+    implementation project(':database')
+    implementation project(':properties')
+
+    runtimeOnly 'org.postgresql:postgresql'
+    if (!rootProject.hasProperty('profile') || !rootProject['profile'].equals('prod')) {
+        runtimeOnly 'com.h2database:h2'
+    }
+}

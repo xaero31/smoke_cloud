@@ -3,4 +3,4 @@ include 'security'
 include 'controller'
 include 'model'
 include 'database'
-
+include 'properties'

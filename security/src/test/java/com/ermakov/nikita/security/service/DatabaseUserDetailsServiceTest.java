@@ -1,6 +1,6 @@
 package com.ermakov.nikita.security.service;
 
-import com.ermakov.nikita.model.security.User;
+import com.ermakov.nikita.entity.security.User;
 import com.ermakov.nikita.security.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

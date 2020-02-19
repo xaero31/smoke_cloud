@@ -1,4 +1,4 @@
-package com.ermakov.nikita.model.security;
+package com.ermakov.nikita.entity.security;
 
 import lombok.Data;
 

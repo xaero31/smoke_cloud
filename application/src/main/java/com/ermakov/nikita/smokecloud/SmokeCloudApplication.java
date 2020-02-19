@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @PropertySource(value = "file:/etc/secret/smoke-cloud-secret", ignoreResourceNotFound = true)
 @SpringBootApplication(scanBasePackages = "com.ermakov.nikita")
-@EntityScan("com.ermakov.nikita.model")
+@EntityScan("com.ermakov.nikita.entity")
 public class SmokeCloudApplication {
 
 	public static void main(String[] args) {

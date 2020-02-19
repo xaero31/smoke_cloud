@@ -13,6 +13,10 @@ springBoot {
     mainClassName = 'com.ermakov.nikita.smokecloud.SmokeCloudApplication'
 }
 
+dependencies {
+    implementation project(':application')
+}
+
 allprojects {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'

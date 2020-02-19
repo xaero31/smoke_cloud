@@ -1,0 +1,40 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<form th:action="@{/register}" th:object="${registerForm}" method="post" enctype="utf8">
+    <div>
+        <label th:text="${'Username'}">Username</label>
+        <input th:field="*{username}"/>
+    </div>
+    <div>
+        <label th:text="${'First name'}">First name</label>
+        <input th:field="*{firstName}"/>
+    </div>
+    <div>
+        <label th:text="${'Last Name'}">Last Name</label>
+        <input th:field="*{lastName}"/>
+    </div>
+    <div>
+        <label th:text="${'Middle Name'}">Middle Name</label>
+        <input th:field="*{middleName}"/>
+    </div>
+    <div>
+        <label th:text="${'Password'}">Password</label>
+        <input type="password" th:field="*{password}"/>
+    </div>
+    <div>
+        <label th:text="${'Confirm Password'}">Confirm Password</label>
+        <input type="password" th:field="*{confirmPassword}"/>
+    </div>
+    <button type="submit" th:text="${'Register'}">Register</button>
+</form>
+<a th:href="@{/login}" th:text="${''}">Back to login page</a>
+</body>
+</html>

@@ -1,12 +1,14 @@
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     implementation project(':model')
     implementation project(':security')
     implementation project(':controller')
     implementation project(':database')
     implementation project(':properties')
+    implementation project(':repository')
 
     runtimeOnly 'org.postgresql:postgresql'
     if (!rootProject.hasProperty('profile') || !rootProject['profile'].equals('prod')) {

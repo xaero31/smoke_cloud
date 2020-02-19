@@ -1,6 +1,6 @@
-package com.ermakov.nikita.model.profile;
+package com.ermakov.nikita.entity.profile;
 
-import com.ermakov.nikita.model.security.User;
+import com.ermakov.nikita.entity.security.User;
 import lombok.Data;
 
 import javax.persistence.*;

@@ -1,7 +1,7 @@
 package com.ermakov.nikita.security.repository;
 
-import com.ermakov.nikita.model.security.Role;
-import com.ermakov.nikita.model.security.User;
+import com.ermakov.nikita.entity.security.Role;
+import com.ermakov.nikita.entity.security.User;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.jpa.QueryHints;
 import org.springframework.beans.factory.annotation.Autowired;

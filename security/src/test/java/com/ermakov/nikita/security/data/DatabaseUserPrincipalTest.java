@@ -1,8 +1,8 @@
 package com.ermakov.nikita.security.data;
 
-import com.ermakov.nikita.model.security.Privilege;
-import com.ermakov.nikita.model.security.Role;
-import com.ermakov.nikita.model.security.User;
+import com.ermakov.nikita.entity.security.Privilege;
+import com.ermakov.nikita.entity.security.Role;
+import com.ermakov.nikita.entity.security.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;

@@ -1,7 +1,7 @@
 package com.ermakov.nikita.security.data;
 
-import com.ermakov.nikita.model.security.Privilege;
-import com.ermakov.nikita.model.security.User;
+import com.ermakov.nikita.entity.security.Privilege;
+import com.ermakov.nikita.entity.security.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

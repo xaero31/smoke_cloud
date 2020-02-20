@@ -1,4 +1,4 @@
-package com.ermakov.nikita.smokecloud.controller;
+package com.ermakov.nikita.controller;
 
 import com.ermakov.nikita.entity.profile.Profile;
 import com.ermakov.nikita.entity.security.User;
@@ -16,8 +16,11 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.persistence.EntityExistsException;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.Collections;
 
 /**
@@ -51,12 +54,28 @@ public class RegisterController {
 
     @Transactional
     @RequestMapping(path = "/register", method = RequestMethod.POST)
-    public String registerPerform(@ModelAttribute RegisterForm registerForm, BindingResult result, Errors errors) {
-        final User user = saveUser(registerForm);
-        saveProfile(registerForm, user);
+    public String registerPerform(@ModelAttribute @Valid RegisterForm registerForm,
+                                  BindingResult result,
+                                  Errors errors,
+                                  RedirectAttributes attributes) {
+        if (result.hasErrors()) {
+            attributes.addFlashAttribute("errors", errors);
+            return "redirect:/register";
+        }
 
-        log.info("Registered new user: {}", user.getUsername());
-        return "redirect:/login";
+        try {
+            final User user = saveUser(registerForm);
+            saveProfile(registerForm, user);
+
+            log.info("Registered new user: {}", user.getUsername());
+            return "redirect:/login";
+        } catch (EntityExistsException e) {
+            attributes.addFlashAttribute("registerError",
+                    String.format("User %s already exists", registerForm.getUsername()));
+
+            log.info("User {} already exists", registerForm.getUsername());
+            return "redirect:/register";
+        }
     }
 
     private User saveUser(RegisterForm registerForm) {

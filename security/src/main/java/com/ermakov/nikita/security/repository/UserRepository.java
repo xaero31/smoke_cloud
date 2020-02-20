@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
@@ -55,14 +54,7 @@ public class UserRepository {
 
     @Transactional
     public User saveUser(User user) {
-        try {
-            log.info("Save new user {}", user.getUsername());
-            em.persist(user);
-        } catch (EntityExistsException e) {
-            log.info("User {} already exists", user.getUsername());
-            em.merge(user);
-        }
-
+        em.persist(user);
         return user;
     }
 }

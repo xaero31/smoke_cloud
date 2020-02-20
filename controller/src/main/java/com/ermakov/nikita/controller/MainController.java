@@ -1,4 +1,4 @@
-package com.ermakov.nikita.smokecloud.controller;
+package com.ermakov.nikita.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

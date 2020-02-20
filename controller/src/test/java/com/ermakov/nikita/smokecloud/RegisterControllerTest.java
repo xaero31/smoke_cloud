@@ -54,9 +54,9 @@ public class RegisterControllerTest {
         registerForm.setUsername("username");
         registerForm.setPassword("password");
         registerForm.setConfirmPassword("password");
-        registerForm.setFirstName("firstName");
-        registerForm.setLastName("lastName");
-        registerForm.setMiddleName("middleName");
+        registerForm.setFirstName("Firstname");
+        registerForm.setLastName("Lastname");
+        registerForm.setMiddleName("Middlename");
 
         lenient().when(userRepository.saveUser(any(User.class))).thenReturn(new User());
         lenient().when(roleRepository.findByName(anyString())).thenReturn(new Role());
@@ -73,20 +73,28 @@ public class RegisterControllerTest {
 
     @Test
     void registerPostShouldCheckUserAndInsertNewUserByRepositories() throws Exception {
+        testRegisterPostForNotExistingErrors();
+        verify(profileRepository, atLeastOnce()).save(any(Profile.class));
+    }
+
+    private void testRegisterPostForNotExistingErrors() throws Exception {
         mockMvc.perform(post("/register")
                 .flashAttr("registerForm", registerForm)
                 .with(csrf()))
                 .andExpect(model().attributeDoesNotExist("errors"))
                 .andExpect(redirectedUrl("/login"))
                 .andReturn();
-
-        verify(profileRepository, atLeastOnce()).save(any(Profile.class));
     }
 
     @Test
     void registerUserWithExistingUserNameShouldReturnErrors() throws Exception {
         when(userRepository.saveUser(any(User.class))).thenThrow(EntityExistsException.class);
-        testRegisterPostForExistingErrors();
+        mockMvc.perform(post("/register")
+                .flashAttr("registerForm", registerForm)
+                .with(csrf()))
+                .andExpect(redirectedUrl("/register"))
+                .andExpect(flash().attributeExists("registerError"))
+                .andReturn();
     }
 
     @Test
@@ -242,12 +250,24 @@ public class RegisterControllerTest {
         testRegisterPostForExistingErrors();
     }
 
+    @Test
+    void registerWithNullMiddleNameShouldWorkProperly() throws Exception {
+        registerForm.setMiddleName(null);
+        testRegisterPostForNotExistingErrors();
+    }
+
+    @Test
+    void registerWithEmptyMiddleNameShouldWorkProperly() throws Exception {
+        registerForm.setMiddleName("");
+        testRegisterPostForNotExistingErrors();
+    }
+
     private void testRegisterPostForExistingErrors() throws Exception {
         mockMvc.perform(post("/register")
                 .flashAttr("registerForm", registerForm)
                 .with(csrf()))
-                .andExpect(redirectedUrl("/login"))
-                .andExpect(model().attributeExists("errors"))
+                .andExpect(redirectedUrl("/register"))
+                .andExpect(flash().attributeExists("errors"))
                 .andReturn();
     }
 }

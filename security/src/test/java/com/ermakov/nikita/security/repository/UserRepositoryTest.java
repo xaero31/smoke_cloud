@@ -14,8 +14,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -32,12 +31,12 @@ public class UserRepositoryTest {
     private UserRepository userRepository;
 
     @BeforeEach
-    @SuppressWarnings("unchecked")
     void before() {
         userRepository = new UserRepository(entityManager);
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     void whenNotFoundUser_throwsNoResultException() {
         when(entityManager.createQuery(anyString(), any())).thenReturn(typedQuery);
         when(typedQuery.setParameter(anyInt(), any())).thenReturn(typedQuery);
@@ -48,6 +47,7 @@ public class UserRepositoryTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     void whenFoundUser_returnUserObject() {
         final User user = new User();
 
@@ -69,9 +69,6 @@ public class UserRepositoryTest {
     @Test
     void whenSavingExistingUserRepositoryShouldUpdateIt() {
         doThrow(EntityExistsException.class).when(entityManager).persist(any(User.class));
-
-        userRepository.saveUser(new User());
-
-        verify(entityManager).merge(any(User.class));
+        assertThrows(EntityExistsException.class, () -> userRepository.saveUser(new User()));
     }
 }

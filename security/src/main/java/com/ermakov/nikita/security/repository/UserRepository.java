@@ -54,6 +54,11 @@ public class UserRepository {
 
     @Transactional
     public User saveUser(User user) {
+        final String username = user.getUsername();
+        if (findByUsername(username) != null) {
+            return null;
+        }
+
         em.persist(user);
         return user;
     }

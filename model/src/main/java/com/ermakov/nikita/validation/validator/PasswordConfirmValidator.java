@@ -11,7 +11,16 @@ public class PasswordConfirmValidator implements ConstraintValidator<PasswordCon
     @Override
     public boolean isValid(RegisterForm value, ConstraintValidatorContext context) {
         if (value.getPassword() != null) {
-            return value.getPassword().equals(value.getConfirmPassword());
+            final boolean isValid = value.getPassword().equals(value.getConfirmPassword());
+
+            if (!isValid) {
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
+                        .addPropertyNode("confirmPassword")
+                        .addConstraintViolation();
+            }
+
+            return isValid;
         }
 
         return false;

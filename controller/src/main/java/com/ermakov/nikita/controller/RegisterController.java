@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.persistence.EntityExistsException;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.Collections;
@@ -59,13 +58,13 @@ public class RegisterController {
             return "register";
         }
 
-        try {
-            final User user = saveUser(registerForm);
+        final User user = saveUser(registerForm);
+        if (user != null) {
             saveProfile(registerForm, user);
 
             log.info("Registered new user: {}", user.getUsername());
             return "redirect:/login";
-        } catch (EntityExistsException e) {
+        } else {
             model.addAttribute("registerError",
                     String.format("User %s already exists", registerForm.getUsername()));
 

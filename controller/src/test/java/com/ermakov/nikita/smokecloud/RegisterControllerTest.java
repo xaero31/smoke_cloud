@@ -7,6 +7,7 @@ import com.ermakov.nikita.model.RegisterForm;
 import com.ermakov.nikita.repository.ProfileRepository;
 import com.ermakov.nikita.repository.RoleRepository;
 import com.ermakov.nikita.security.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+
+import javax.persistence.EntityExistsException;
+import java.util.Arrays;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -41,6 +45,24 @@ public class RegisterControllerTest {
     @MockBean
     private ProfileRepository profileRepository;
 
+    private RegisterForm registerForm;
+
+    @BeforeEach
+    void before() {
+        registerForm = new RegisterForm();
+
+        registerForm.setUsername("username");
+        registerForm.setPassword("password");
+        registerForm.setConfirmPassword("password");
+        registerForm.setFirstName("firstName");
+        registerForm.setLastName("lastName");
+        registerForm.setMiddleName("middleName");
+
+        lenient().when(userRepository.saveUser(any(User.class))).thenReturn(new User());
+        lenient().when(roleRepository.findByName(anyString())).thenReturn(new Role());
+        lenient().when(profileRepository.save(any(Profile.class))).thenReturn(new Profile());
+    }
+
     @Test
     void registerGetShouldReturnRegisterFormInModel() throws Exception {
         mockMvc.perform(get("/register"))
@@ -51,26 +73,181 @@ public class RegisterControllerTest {
 
     @Test
     void registerPostShouldCheckUserAndInsertNewUserByRepositories() throws Exception {
-        final RegisterForm registerForm = new RegisterForm();
-        registerForm.setUsername("user");
-        registerForm.setPassword("pass");
-        registerForm.setConfirmPassword("pass");
-        registerForm.setFirstName("firstName");
-        registerForm.setLastName("lastName");
-        registerForm.setMiddleName("middleName");
-
-        when(userRepository.saveUser(any(User.class))).thenReturn(new User());
-        when(roleRepository.findByName(anyString())).thenReturn(new Role());
-        when(profileRepository.save(any(Profile.class))).thenReturn(new Profile());
-
-        System.out.println(profileRepository == null);
-
         mockMvc.perform(post("/register")
                 .flashAttr("registerForm", registerForm)
                 .with(csrf()))
+                .andExpect(model().attributeDoesNotExist("errors"))
                 .andExpect(redirectedUrl("/login"))
                 .andReturn();
 
         verify(profileRepository, atLeastOnce()).save(any(Profile.class));
+    }
+
+    @Test
+    void registerUserWithExistingUserNameShouldReturnErrors() throws Exception {
+        when(userRepository.saveUser(any(User.class))).thenThrow(EntityExistsException.class);
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithNullUsernameShouldReturnErrors() throws Exception {
+        registerForm.setUsername(null);
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithEmptyUsernameShouldReturnErrors() throws Exception {
+        registerForm.setUsername("");
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithShortUsernameShouldReturnErrors() throws Exception {
+        registerForm.setUsername("abc");
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithLongUsernameShouldReturnErrors() throws Exception {
+        final char[] usernameCharArray = new char[300];
+        Arrays.fill(usernameCharArray, 's');
+        registerForm.setUsername(new String(usernameCharArray));
+
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithUsernameWithNotOnlyLettersAndNumbersShouldReturnErrors() throws Exception {
+        registerForm.setUsername("(-fwfqd");
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithEmptyPasswordShouldReturnErrors() throws Exception {
+        registerForm.setPassword("");
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithNullPasswordShouldReturnErrors() throws Exception {
+        registerForm.setPassword(null);
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithVeryLongPasswordShouldReturnErrors() throws Exception {
+        final char[] passwordCharArray = new char[300];
+        Arrays.fill(passwordCharArray, 'p');
+        registerForm.setPassword(new String(passwordCharArray));
+
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithVeryShortPasswordShouldReturnErrors() throws Exception {
+        registerForm.setPassword("abcde");
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithNotMatchingPasswordsShouldReturnErrors() throws Exception {
+        registerForm.setConfirmPassword("abcde");
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithNullFirstNameShouldReturnErrors() throws Exception {
+        registerForm.setFirstName(null);
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithEmptyFirstNameShouldReturnErrors() throws Exception {
+        registerForm.setFirstName("");
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithShortFirstNameShouldReturnErrors() throws Exception {
+        registerForm.setFirstName("a");
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithVeryLongFirstNameShouldReturnErrors() throws Exception {
+        final char[] firstNameCharArray = new char[300];
+        Arrays.fill(firstNameCharArray, 'd');
+        registerForm.setFirstName(new String(firstNameCharArray));
+
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithFirstNameNotOblyOfLettersShouldReturnErrors() throws Exception {
+        registerForm.setFirstName("ads2-");
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithNullLastNameShouldReturnErrors() throws Exception {
+        registerForm.setLastName(null);
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithEmptyLastNameShouldReturnErrors() throws Exception {
+        registerForm.setLastName("");
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithShortLastNameShouldReturnErrors() throws Exception {
+        registerForm.setLastName("ta");
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithLongLastNameShouldReturnErrors() throws Exception {
+        final char[] lastNameCharArray = new char[300];
+        Arrays.fill(lastNameCharArray, 'f');
+        registerForm.setLastName(new String(lastNameCharArray));
+
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithLastNameNotOnlyOfLettersAndMinusShouldReturnErrors() throws Exception {
+        registerForm.setLastName("ada11=");
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithShortMiddleNameShouldReturnErrors() throws Exception {
+        registerForm.setLastName("af");
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithMiddleNameNotOnlyOfLettersShouldReturnErrors() throws Exception {
+        registerForm.setLastName("ada11=");
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithLongMiddleNameShouldReturnErrors() throws Exception {
+        final char[] middleNameCharArray = new char[300];
+        Arrays.fill(middleNameCharArray, 'f');
+        registerForm.setLastName(new String(middleNameCharArray));
+
+        testRegisterPostForExistingErrors();
+    }
+
+    private void testRegisterPostForExistingErrors() throws Exception {
+        mockMvc.perform(post("/register")
+                .flashAttr("registerForm", registerForm)
+                .with(csrf()))
+                .andExpect(redirectedUrl("/login"))
+                .andExpect(model().attributeExists("errors"))
+                .andReturn();
     }
 }

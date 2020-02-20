@@ -30,6 +30,7 @@ allprojects {
             dependency 'org.liquibase:liquibase-core:3.8.6'
             dependency 'org.yaml:snakeyaml:1.25'
             dependency 'org.projectlombok:lombok:1.18.12'
+            dependency 'javax.validation:validation-api:2.0.1.Final'
         }
     }
 

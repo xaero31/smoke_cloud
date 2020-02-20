@@ -12,11 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.persistence.EntityExistsException;
 import javax.transaction.Transactional;
@@ -56,11 +54,9 @@ public class RegisterController {
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public String registerPerform(@ModelAttribute @Valid RegisterForm registerForm,
                                   BindingResult result,
-                                  Errors errors,
-                                  RedirectAttributes attributes) {
+                                  Model model) {
         if (result.hasErrors()) {
-            attributes.addFlashAttribute("errors", errors);
-            return "redirect:/register";
+            return "register";
         }
 
         try {
@@ -70,11 +66,11 @@ public class RegisterController {
             log.info("Registered new user: {}", user.getUsername());
             return "redirect:/login";
         } catch (EntityExistsException e) {
-            attributes.addFlashAttribute("registerError",
+            model.addAttribute("registerError",
                     String.format("User %s already exists", registerForm.getUsername()));
 
             log.info("User {} already exists", registerForm.getUsername());
-            return "redirect:/register";
+            return "register";
         }
     }
 

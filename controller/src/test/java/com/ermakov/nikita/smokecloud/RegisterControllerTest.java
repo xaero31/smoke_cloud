@@ -92,8 +92,8 @@ public class RegisterControllerTest {
         mockMvc.perform(post("/register")
                 .flashAttr("registerForm", registerForm)
                 .with(csrf()))
-                .andExpect(redirectedUrl("/register"))
-                .andExpect(flash().attributeExists("registerError"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("registerError"))
                 .andReturn();
     }
 
@@ -266,8 +266,8 @@ public class RegisterControllerTest {
         mockMvc.perform(post("/register")
                 .flashAttr("registerForm", registerForm)
                 .with(csrf()))
-                .andExpect(redirectedUrl("/register"))
-                .andExpect(flash().attributeExists("errors"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrors("registerForm"))
                 .andReturn();
     }
 }

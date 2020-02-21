@@ -6,3 +6,5 @@ include 'database'
 include 'properties'
 include 'application'
 include 'repository'
+include 'service'
+

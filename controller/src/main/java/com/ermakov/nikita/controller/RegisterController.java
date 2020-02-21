@@ -3,9 +3,9 @@ package com.ermakov.nikita.controller;
 import com.ermakov.nikita.entity.profile.Profile;
 import com.ermakov.nikita.entity.security.User;
 import com.ermakov.nikita.model.RegisterForm;
-import com.ermakov.nikita.repository.ProfileRepository;
 import com.ermakov.nikita.repository.RoleRepository;
 import com.ermakov.nikita.repository.UserRepository;
+import com.ermakov.nikita.service.api.ProfileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,17 +28,17 @@ import java.util.Collections;
 public class RegisterController {
 
     private final UserRepository userRepository;
-    private final ProfileRepository profileRepository;
     private final RoleRepository roleRepository;
+    private final ProfileService profileService;
 
     private final PasswordEncoder passwordEncoder;
 
     public RegisterController(@Autowired UserRepository userRepository,
-                              @Autowired ProfileRepository profileRepository,
                               @Autowired RoleRepository roleRepository,
+                              @Autowired ProfileService profileService,
                               @Autowired PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.profileRepository = profileRepository;
+        this.profileService = profileService;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -95,6 +95,6 @@ public class RegisterController {
         profile.setLastName(registerForm.getLastName());
         profile.setMiddleName(registerForm.getMiddleName());
 
-        profileRepository.save(profile);
+        profileService.save(profile);
     }
 }

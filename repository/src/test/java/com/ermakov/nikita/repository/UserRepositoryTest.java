@@ -1,4 +1,4 @@
-package com.ermakov.nikita.security.repository;
+package com.ermakov.nikita.repository;
 
 import com.ermakov.nikita.entity.security.Role;
 import com.ermakov.nikita.entity.security.User;
@@ -36,13 +36,8 @@ public class UserRepositoryTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     void whenNotFoundUser_throwsNoResultException() {
-        when(entityManager.createQuery(anyString(), any())).thenReturn(typedQuery);
-        when(typedQuery.setParameter(anyInt(), any())).thenReturn(typedQuery);
-        when(typedQuery.setHint(anyString(), anyBoolean())).thenReturn(typedQuery);
-        when(typedQuery.getSingleResult()).thenThrow(NoResultException.class);
-
+        setMocksForNoExistingUser();
         assertNull(userRepository.findByUsername("username"));
     }
 
@@ -62,13 +57,23 @@ public class UserRepositoryTest {
 
     @Test
     void saveNewUserTest() {
+        setMocksForNoExistingUser();
         userRepository.saveUser(new User());
         verify(entityManager).persist(any(User.class));
     }
 
     @Test
     void whenSavingExistingUserRepositoryShouldUpdateIt() {
+        setMocksForNoExistingUser();
         doThrow(EntityExistsException.class).when(entityManager).persist(any(User.class));
         assertThrows(EntityExistsException.class, () -> userRepository.saveUser(new User()));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setMocksForNoExistingUser() {
+        when(entityManager.createQuery(anyString(), any())).thenReturn(typedQuery);
+        when(typedQuery.setParameter(anyInt(), any())).thenReturn(typedQuery);
+        when(typedQuery.setHint(anyString(), anyBoolean())).thenReturn(typedQuery);
+        when(typedQuery.getSingleResult()).thenThrow(NoResultException.class);
     }
 }

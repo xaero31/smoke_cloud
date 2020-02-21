@@ -1,8 +1,8 @@
 package com.ermakov.nikita.security.service;
 
 import com.ermakov.nikita.entity.security.User;
+import com.ermakov.nikita.repository.UserRepository;
 import com.ermakov.nikita.security.data.DatabaseUserPrincipal;
-import com.ermakov.nikita.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

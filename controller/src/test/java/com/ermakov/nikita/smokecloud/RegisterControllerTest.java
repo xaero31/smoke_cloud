@@ -6,7 +6,7 @@ import com.ermakov.nikita.entity.security.User;
 import com.ermakov.nikita.model.RegisterForm;
 import com.ermakov.nikita.repository.ProfileRepository;
 import com.ermakov.nikita.repository.RoleRepository;
-import com.ermakov.nikita.security.repository.UserRepository;
+import com.ermakov.nikita.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -88,7 +88,7 @@ public class RegisterControllerTest {
 
     @Test
     void registerUserWithExistingUserNameShouldReturnErrors() throws Exception {
-        when(userRepository.saveUser(any(User.class))).thenThrow(EntityExistsException.class);
+        when(userRepository.saveUser(any(User.class))).thenReturn(null);
         mockMvc.perform(post("/register")
                 .flashAttr("registerForm", registerForm)
                 .with(csrf()))

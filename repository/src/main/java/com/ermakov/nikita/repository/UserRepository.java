@@ -1,4 +1,4 @@
-package com.ermakov.nikita.security.repository;
+package com.ermakov.nikita.repository;
 
 import com.ermakov.nikita.entity.security.Role;
 import com.ermakov.nikita.entity.security.User;

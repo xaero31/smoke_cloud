@@ -5,7 +5,7 @@ import com.ermakov.nikita.entity.security.User;
 import com.ermakov.nikita.model.RegisterForm;
 import com.ermakov.nikita.repository.ProfileRepository;
 import com.ermakov.nikita.repository.RoleRepository;
-import com.ermakov.nikita.security.repository.UserRepository;
+import com.ermakov.nikita.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

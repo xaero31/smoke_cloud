@@ -1,23 +1,23 @@
-package com.ermakov.nikita.smokecloud.controller;
+package com.ermakov.nikita.controller;
 
 import com.ermakov.nikita.entity.profile.Profile;
 import com.ermakov.nikita.entity.security.User;
 import com.ermakov.nikita.model.RegisterForm;
-import com.ermakov.nikita.repository.ProfileRepository;
 import com.ermakov.nikita.repository.RoleRepository;
-import com.ermakov.nikita.security.repository.UserRepository;
+import com.ermakov.nikita.repository.UserRepository;
+import com.ermakov.nikita.service.api.ProfileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.Collections;
 
 /**
@@ -28,17 +28,17 @@ import java.util.Collections;
 public class RegisterController {
 
     private final UserRepository userRepository;
-    private final ProfileRepository profileRepository;
     private final RoleRepository roleRepository;
+    private final ProfileService profileService;
 
     private final PasswordEncoder passwordEncoder;
 
     public RegisterController(@Autowired UserRepository userRepository,
-                              @Autowired ProfileRepository profileRepository,
                               @Autowired RoleRepository roleRepository,
+                              @Autowired ProfileService profileService,
                               @Autowired PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.profileRepository = profileRepository;
+        this.profileService = profileService;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -51,12 +51,26 @@ public class RegisterController {
 
     @Transactional
     @RequestMapping(path = "/register", method = RequestMethod.POST)
-    public String registerPerform(@ModelAttribute RegisterForm registerForm, BindingResult result, Errors errors) {
-        final User user = saveUser(registerForm);
-        saveProfile(registerForm, user);
+    public String registerPerform(@ModelAttribute @Valid RegisterForm registerForm,
+                                  BindingResult result,
+                                  Model model) {
+        if (result.hasErrors()) {
+            return "register";
+        }
 
-        log.info("Registered new user: {}", user.getUsername());
-        return "redirect:/login";
+        final User user = saveUser(registerForm);
+        if (user != null) {
+            saveProfile(registerForm, user);
+
+            log.info("Registered new user: {}", user.getUsername());
+            return "redirect:/login";
+        } else {
+            model.addAttribute("registerError",
+                    String.format("User %s already exists", registerForm.getUsername()));
+
+            log.info("User {} already exists", registerForm.getUsername());
+            return "register";
+        }
     }
 
     private User saveUser(RegisterForm registerForm) {
@@ -81,6 +95,6 @@ public class RegisterController {
         profile.setLastName(registerForm.getLastName());
         profile.setMiddleName(registerForm.getMiddleName());
 
-        profileRepository.save(profile);
+        profileService.save(profile);
     }
 }

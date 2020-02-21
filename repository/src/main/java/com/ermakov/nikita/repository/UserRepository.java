@@ -1,4 +1,4 @@
-package com.ermakov.nikita.security.repository;
+package com.ermakov.nikita.repository;
 
 import com.ermakov.nikita.entity.security.Role;
 import com.ermakov.nikita.entity.security.User;
@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
@@ -55,14 +54,12 @@ public class UserRepository {
 
     @Transactional
     public User saveUser(User user) {
-        try {
-            log.info("Save new user {}", user.getUsername());
-            em.persist(user);
-        } catch (EntityExistsException e) {
-            log.info("User {} already exists", user.getUsername());
-            em.merge(user);
+        final String username = user.getUsername();
+        if (findByUsername(username) != null) {
+            return null;
         }
 
+        em.persist(user);
         return user;
     }
 }

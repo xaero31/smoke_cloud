@@ -1,4 +1,4 @@
-package com.ermakov.nikita.security.repository;
+package com.ermakov.nikita.repository;
 
 import com.ermakov.nikita.entity.security.Role;
 import com.ermakov.nikita.entity.security.User;
@@ -14,8 +14,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -32,22 +31,18 @@ public class UserRepositoryTest {
     private UserRepository userRepository;
 
     @BeforeEach
-    @SuppressWarnings("unchecked")
     void before() {
         userRepository = new UserRepository(entityManager);
     }
 
     @Test
     void whenNotFoundUser_throwsNoResultException() {
-        when(entityManager.createQuery(anyString(), any())).thenReturn(typedQuery);
-        when(typedQuery.setParameter(anyInt(), any())).thenReturn(typedQuery);
-        when(typedQuery.setHint(anyString(), anyBoolean())).thenReturn(typedQuery);
-        when(typedQuery.getSingleResult()).thenThrow(NoResultException.class);
-
+        setMocksForNoExistingUser();
         assertNull(userRepository.findByUsername("username"));
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     void whenFoundUser_returnUserObject() {
         final User user = new User();
 
@@ -62,16 +57,23 @@ public class UserRepositoryTest {
 
     @Test
     void saveNewUserTest() {
+        setMocksForNoExistingUser();
         userRepository.saveUser(new User());
         verify(entityManager).persist(any(User.class));
     }
 
     @Test
-    void whenSavingExistingUserRepositoryShouldUpdateIt() {
+    void whenSavingExistingUserRepositoryShouldThrowAnException() {
+        setMocksForNoExistingUser();
         doThrow(EntityExistsException.class).when(entityManager).persist(any(User.class));
+        assertThrows(EntityExistsException.class, () -> userRepository.saveUser(new User()));
+    }
 
-        userRepository.saveUser(new User());
-
-        verify(entityManager).merge(any(User.class));
+    @SuppressWarnings("unchecked")
+    private void setMocksForNoExistingUser() {
+        when(entityManager.createQuery(anyString(), any())).thenReturn(typedQuery);
+        when(typedQuery.setParameter(anyInt(), any())).thenReturn(typedQuery);
+        when(typedQuery.setHint(anyString(), anyBoolean())).thenReturn(typedQuery);
+        when(typedQuery.getSingleResult()).thenThrow(NoResultException.class);
     }
 }

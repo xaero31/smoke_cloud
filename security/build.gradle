@@ -5,6 +5,7 @@ dependencies {
 
     implementation project(':model')
     implementation project(':properties')
+    implementation project(':repository')
 
     testImplementation project(':application')
 }

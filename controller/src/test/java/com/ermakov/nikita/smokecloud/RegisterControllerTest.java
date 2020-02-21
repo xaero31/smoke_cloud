@@ -17,7 +17,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.persistence.EntityExistsException;
 import java.util.Arrays;
 
 import static org.mockito.ArgumentMatchers.any;

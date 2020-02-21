@@ -63,7 +63,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    void whenSavingExistingUserRepositoryShouldUpdateIt() {
+    void whenSavingExistingUserRepositoryShouldThrowAnException() {
         setMocksForNoExistingUser();
         doThrow(EntityExistsException.class).when(entityManager).persist(any(User.class));
         assertThrows(EntityExistsException.class, () -> userRepository.saveUser(new User()));

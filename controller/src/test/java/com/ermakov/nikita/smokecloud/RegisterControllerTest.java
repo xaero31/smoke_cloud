@@ -210,7 +210,7 @@ public class RegisterControllerTest {
 
     @Test
     void registerWithShortLastNameShouldReturnErrors() throws Exception {
-        registerForm.setLastName("ta");
+        registerForm.setLastName("t");
         testRegisterPostForExistingErrors();
     }
 
@@ -231,7 +231,7 @@ public class RegisterControllerTest {
 
     @Test
     void registerWithShortMiddleNameShouldReturnErrors() throws Exception {
-        registerForm.setLastName("af");
+        registerForm.setMiddleName("af");
         testRegisterPostForExistingErrors();
     }
 

@@ -18,7 +18,7 @@ public class RegisterForm {
     @NotEmpty(message = "Username couldn't be empty")
     @NotNull(message = "Username couldn't be null")
     @Size(min = 4, max = 50, message = "Username size should be between {min} and {max} symbols")
-    @Pattern(regexp = "[a-zA-Z0-9]*", message = "Username should contain only letters and numbers")
+    @Pattern(regexp = "[a-zA-Z0-9]*", message = "Username should contains only letters and numbers")
     private String username;
 
     @NotEmpty(message = "Password couldn't be empty")
@@ -31,18 +31,19 @@ public class RegisterForm {
     @NotEmpty(message = "FirstName couldn't be empty")
     @NotNull(message = "FirstName couldn't be null")
     @Size(min = 2, max = 50, message = "FirstName size should be between {min} and {max} symbols")
-    @Pattern(regexp = "[A-ZА-Я][a-zа-я]+", message = "FirstName should contain only letters")
+    @Pattern(regexp = "[A-ZА-Я][a-zа-я]+", 
+            message = "FirstName should contains only letters and starts with capitalize letter")
     private String firstName;
 
     @NotEmpty(message = "LastName couldn't be empty")
     @NotNull(message = "LastName couldn't be null")
     @Size(min = 2, max = 100, message = "LastName size should be between {min} and {max} symbols")
     @Pattern(regexp = "([A-ZА-Я][a-zа-я]+)(-[A-ZА-Я][a-zа-я]+)?",
-            message = "LastName should contain only letters and '-'")
+            message = "LastName should contains only letters and '-' and starts with capitalize letter")
     private String lastName;
 
     @Size(max = 100, message = "MiddleName size should be less than {max} symbols")
     @Pattern(regexp = "[A-ZА-Я][a-zа-я]{2,}|^$",
-            message = "MiddleName should contain only letters and size more than 3 symbols")
+            message = "MiddleName should contains only letters and starts with capitalize letter size more than 3 symbols")
     private String middleName;
 }

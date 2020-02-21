@@ -10,34 +10,46 @@
 <body>
 <form th:action="@{/register}" th:object="${registerForm}" method="post">
     <div>
-        <label th:text="${'Username'}">Username</label>
+        <label th:text="${'Username'}"></label>
         <input th:field="*{username}"/>
-        <p style="color: red" th:each="error : ${#fields.errors('username')}" th:text="${error}"></p>
+        <p style="color: red"
+           th:each="error : ${#fields.errors('username')}"
+           th:text="${error}"></p>
     </div>
     <div>
-        <label th:text="${'First name'}">First name</label>
-        <input th:field="*{firstName}"/>
-        <p style="color: red" th:each="error : ${#fields.errors('firstName')}" th:text="${error}"></p>
+        <label th:text="${'First name'}"></label>
+        <input style="text-transform: capitalize" th:field="*{firstName}"/>
+        <p style="color: red"
+           th:each="error : ${#fields.errors('firstName')}"
+           th:text="${error}"></p>
     </div>
     <div>
-        <label th:text="${'Last Name'}">Last Name</label>
-        <input th:field="*{lastName}"/>
-        <p style="color: red" th:each="error : ${#fields.errors('lastName')}" th:text="${error}"></p>
+        <label th:text="${'Last Name'}"></label>
+        <input style="text-transform: capitalize" th:field="*{lastName}"/>
+        <p style="color: red"
+           th:each="error : ${#fields.errors('lastName')}"
+           th:text="${error}"></p>
     </div>
     <div>
-        <label th:text="${'Middle Name'}">Middle Name</label>
-        <input th:field="*{middleName}"/>
-        <p style="color: red" th:each="error : ${#fields.errors('middleName')}" th:text="${error}"></p>
+        <label th:text="${'Middle Name'}"></label>
+        <input style="text-transform: capitalize" th:field="*{middleName}"/>
+        <p style="color: red"
+           th:each="error : ${#fields.errors('middleName')}"
+           th:text="${error}"></p>
     </div>
     <div>
-        <label th:text="${'Password'}">Password</label>
+        <label th:text="${'Password'}"></label>
         <input type="password" th:field="*{password}"/>
-        <p style="color: red" th:each="error : ${#fields.errors('password')}" th:text="${error}"></p>
+        <p style="color: red"
+           th:each="error : ${#fields.errors('password')}"
+           th:text="${error}"></p>
     </div>
     <div>
-        <label th:text="${'Confirm Password'}">Confirm Password</label>
+        <label th:text="${'Confirm Password'}"></label>
         <input type="password" th:field="*{confirmPassword}"/>
-        <p style="color: red" th:each="error : ${#fields.errors('confirmPassword')}" th:text="${error}"></p>
+        <p style="color: red"
+           th:each="error : ${#fields.errors('confirmPassword')}"
+           th:text="${error}"></p>
     </div>
     <button type="submit" th:text="${'Register'}">Register</button>
 </form>

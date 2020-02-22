@@ -1,5 +1,7 @@
 package com.ermakov.nikita.controller;
 
+import com.ermakov.nikita.ControllerPath;
+import com.ermakov.nikita.ViewName;
 import com.ermakov.nikita.entity.profile.Profile;
 import com.ermakov.nikita.entity.security.User;
 import com.ermakov.nikita.model.RegisterForm;
@@ -43,19 +45,19 @@ public class RegisterController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @RequestMapping(path = "/register", method = RequestMethod.GET)
+    @RequestMapping(path = ControllerPath.REGISTER, method = RequestMethod.GET)
     public String register(Model model) {
         model.addAttribute("registerForm", new RegisterForm());
-        return "register";
+        return ViewName.REGISTER;
     }
 
     @Transactional
-    @RequestMapping(path = "/register", method = RequestMethod.POST)
+    @RequestMapping(path = ControllerPath.REGISTER, method = RequestMethod.POST)
     public String registerPerform(@ModelAttribute @Valid RegisterForm registerForm,
                                   BindingResult result,
                                   Model model) {
         if (result.hasErrors()) {
-            return "register";
+            return ViewName.REGISTER;
         }
 
         final User user = saveUser(registerForm);
@@ -63,13 +65,13 @@ public class RegisterController {
             saveProfile(registerForm, user);
 
             log.info("Registered new user: {}", user.getUsername());
-            return "redirect:/login";
+            return ControllerPath.REDIRECT + ControllerPath.LOGIN;
         } else {
             model.addAttribute("registerError",
                     String.format("User %s already exists", registerForm.getUsername()));
 
             log.info("User {} already exists", registerForm.getUsername());
-            return "register";
+            return ViewName.REGISTER;
         }
     }
 

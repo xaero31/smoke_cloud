@@ -1,14 +1,14 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Register page</title>
 </head>
 <body>
-<form th:action="@{/register}" th:object="${registerForm}" method="post">
+<form th:action="@{${T(com.ermakov.nikita.ControllerPath).REGISTER}}" th:object="${registerForm}" method="post">
     <div>
         <label th:text="${'Username'}"></label>
         <input th:field="*{username}"/>
@@ -54,6 +54,6 @@
     <button type="submit" th:text="${'Register'}">Register</button>
 </form>
 <p style="color: red" th:if="${registerError != null}" th:text="${registerError}"></p>
-<a th:href="@{/login}" th:text="${''}">Back to login page</a>
+<a th:href="@{${T(com.ermakov.nikita.ControllerPath).LOGIN}}" th:text="${''}">Back to login page</a>
 </body>
 </html>

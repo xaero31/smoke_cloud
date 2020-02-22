@@ -1,8 +1,10 @@
-<html xmlns:th="http://www.thymeleaf.org">
-<head></head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login page</title>
+</head>
 <body>
 <h1>Login</h1>
-<form name='loginForm' th:action='@{/login}' method='POST'>
+<form name='loginForm' th:action='@{${@com.ermakov.nikita.ControllerPath@LOGIN}}' method='POST'>
     <table>
         <tr>
             <td>User:</td>

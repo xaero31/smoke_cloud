@@ -8,7 +8,7 @@
     <title>Register page</title>
 </head>
 <body>
-<form th:action="@{${@com.ermakov.nikita.ControllerPath@REGISTER}}" th:object="${registerForm}" method="post">
+<form th:action="@{${T(com.ermakov.nikita.ControllerPath).REGISTER}}" th:object="${registerForm}" method="post">
     <div>
         <label th:text="${'Username'}"></label>
         <input th:field="*{username}"/>
@@ -54,6 +54,6 @@
     <button type="submit" th:text="${'Register'}">Register</button>
 </form>
 <p style="color: red" th:if="${registerError != null}" th:text="${registerError}"></p>
-<a th:href="@{${@com.ermakov.nikita.ControllerPath@LOGIN}}" th:text="${''}">Back to login page</a>
+<a th:href="@{${T(com.ermakov.nikita.ControllerPath).LOGIN}}" th:text="${''}">Back to login page</a>
 </body>
 </html>

@@ -4,7 +4,7 @@
 </head>
 <body>
 <h1>Login</h1>
-<form name='loginForm' th:action='@{${@com.ermakov.nikita.ControllerPath@LOGIN}}' method='POST'>
+<form name='loginForm' th:action='@{${T(com.ermakov.nikita.ControllerPath).LOGIN}}' method='POST'>
     <table>
         <tr>
             <td>User:</td>

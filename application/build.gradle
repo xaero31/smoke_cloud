@@ -9,6 +9,7 @@ dependencies {
     implementation project(':database')
     implementation project(':properties')
     implementation project(':repository')
+    implementation project(':queue')
 
     runtimeOnly 'org.postgresql:postgresql'
     if (!rootProject.hasProperty('profile') || !rootProject['profile'].equals('prod')) {

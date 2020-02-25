@@ -4,12 +4,14 @@ import com.ermakov.nikita.ControllerPath;
 import com.ermakov.nikita.ViewName;
 import com.ermakov.nikita.entity.profile.Profile;
 import com.ermakov.nikita.entity.security.User;
+import com.ermakov.nikita.event.RegisterEvent;
 import com.ermakov.nikita.model.RegisterForm;
 import com.ermakov.nikita.repository.RoleRepository;
 import com.ermakov.nikita.repository.UserRepository;
 import com.ermakov.nikita.service.api.ProfileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,16 +35,19 @@ public class RegisterController {
     private final RoleRepository roleRepository;
     private final ProfileService profileService;
 
+    private final ApplicationEventPublisher eventPublisher;
     private final PasswordEncoder passwordEncoder;
 
     public RegisterController(@Autowired UserRepository userRepository,
                               @Autowired RoleRepository roleRepository,
                               @Autowired ProfileService profileService,
-                              @Autowired PasswordEncoder passwordEncoder) {
+                              @Autowired PasswordEncoder passwordEncoder,
+                              @Autowired ApplicationEventPublisher eventPublisher) {
         this.userRepository = userRepository;
         this.profileService = profileService;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.eventPublisher = eventPublisher;
     }
 
     @RequestMapping(path = ControllerPath.REGISTER, method = RequestMethod.GET)
@@ -63,6 +68,7 @@ public class RegisterController {
         final User user = saveUser(registerForm);
         if (user != null) {
             saveProfile(registerForm, user);
+            eventPublisher.publishEvent(new RegisterEvent(this, user));
 
             log.info("Registered new user: {}", user.getUsername());
             return ControllerPath.REDIRECT + ControllerPath.LOGIN;

@@ -3,6 +3,7 @@ package com.ermakov.nikita.smokecloud;
 import com.ermakov.nikita.entity.profile.Profile;
 import com.ermakov.nikita.entity.security.Role;
 import com.ermakov.nikita.entity.security.User;
+import com.ermakov.nikita.event.RegisterEvent;
 import com.ermakov.nikita.model.RegisterForm;
 import com.ermakov.nikita.repository.ProfileRepository;
 import com.ermakov.nikita.repository.RoleRepository;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -43,6 +45,9 @@ public class RegisterControllerTest {
 
     @MockBean
     private ProfileRepository profileRepository;
+
+    @MockBean
+    private ApplicationEventPublisher applicationEventPublisher;
 
     private RegisterForm registerForm;
 
@@ -74,6 +79,12 @@ public class RegisterControllerTest {
     void registerPostShouldCheckUserAndInsertNewUserByRepositories() throws Exception {
         testRegisterPostForNotExistingErrors();
         verify(profileRepository, atLeastOnce()).save(any(Profile.class));
+    }
+
+    @Test
+    void registerPostShouldPublishRegisterEvent() throws Exception {
+        testRegisterPostForNotExistingErrors();
+        verify(applicationEventPublisher, atLeastOnce()).publishEvent(any(RegisterEvent.class));
     }
 
     private void testRegisterPostForNotExistingErrors() throws Exception {

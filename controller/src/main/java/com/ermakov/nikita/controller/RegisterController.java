@@ -90,7 +90,6 @@ public class RegisterController {
         user.setCredentialsNonExpired(true);
         user.setNonExpired(true);
         user.setNonLocked(true);
-        user.setEnabled(true); // todo then add here false until mail confirmation
 
         return userRepository.saveUser(user);
     }

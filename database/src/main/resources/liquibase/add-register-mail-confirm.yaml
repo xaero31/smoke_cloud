@@ -48,6 +48,7 @@ databaseChangeLog:
               - column:
                   name: email
                   type: varchar(50)
+                  defaultValue: empty
                   constraints:
                     nullable: false
                     unique: true

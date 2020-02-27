@@ -17,6 +17,13 @@
            th:text="${error}"></p>
     </div>
     <div>
+        <label th:text="${'Email'}"></label>
+        <input th:field="*{email}"/>
+        <p style="color: red"
+           th:each="error : ${#fields.errors('email')}"
+           th:text="${error}"></p>
+    </div>
+    <div>
         <label th:text="${'First name'}"></label>
         <input style="text-transform: capitalize" th:field="*{firstName}"/>
         <p style="color: red"

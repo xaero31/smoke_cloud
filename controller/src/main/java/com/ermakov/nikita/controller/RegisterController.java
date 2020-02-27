@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -79,6 +80,11 @@ public class RegisterController {
             log.info("User {} already exists", registerForm.getUsername());
             return ViewName.REGISTER;
         }
+    }
+
+    @RequestMapping(path = ControllerPath.VERIFY_USER, method = RequestMethod.POST)
+    public String verifyUser(@RequestParam("token") String token) {
+        throw new UnsupportedOperationException("not implemented"); // todo
     }
 
     private User saveUser(RegisterForm registerForm) {

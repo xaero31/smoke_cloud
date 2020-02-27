@@ -1,5 +1,6 @@
 package com.ermakov.nikita.smokecloud;
 
+import com.ermakov.nikita.controller.RegisterController;
 import com.ermakov.nikita.entity.profile.Profile;
 import com.ermakov.nikita.entity.security.Role;
 import com.ermakov.nikita.entity.security.User;
@@ -16,11 +17,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 
 import java.util.Arrays;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -49,6 +55,12 @@ public class RegisterControllerTest {
     @MockBean
     private ApplicationEventPublisher applicationEventPublisher;
 
+    @MockBean
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RegisterController registerController;
+
     private RegisterForm registerForm;
 
     @BeforeEach
@@ -58,6 +70,7 @@ public class RegisterControllerTest {
         registerForm.setUsername("username");
         registerForm.setPassword("password");
         registerForm.setConfirmPassword("password");
+        registerForm.setEmail("email@email.com");
         registerForm.setFirstName("Firstname");
         registerForm.setLastName("Lastname");
         registerForm.setMiddleName("Middlename");
@@ -65,6 +78,7 @@ public class RegisterControllerTest {
         lenient().when(userRepository.saveUser(any(User.class))).thenReturn(new User());
         lenient().when(roleRepository.findByName(anyString())).thenReturn(new Role());
         lenient().when(profileRepository.save(any(Profile.class))).thenReturn(new Profile());
+        lenient().when(passwordEncoder.encode(anyString())).then(invocation -> invocation.getArgument(0));
     }
 
     @Test
@@ -270,6 +284,65 @@ public class RegisterControllerTest {
     void registerWithEmptyMiddleNameShouldWorkProperly() throws Exception {
         registerForm.setMiddleName("");
         testRegisterPostForNotExistingErrors();
+    }
+
+    @Test
+    void registerWithNullEmailShouldReturnErrors() throws Exception {
+        registerForm.setEmail(null);
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithEmptyEmailShouldReturnErrors() throws Exception {
+        registerForm.setEmail("");
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithLongMailShouldReturnErrors() throws Exception {
+        final char[] mailCharArray = new char[300];
+        Arrays.fill(mailCharArray, 'm');
+        registerForm.setEmail(new String(mailCharArray));
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void registerWithMailNotMeetPatternShouldReturnErrors() throws Exception {
+        registerForm.setEmail("random email");
+        testRegisterPostForExistingErrors();
+    }
+
+    @Test
+    void testFillUserInfoFromRegisterForm() {
+        reset(userRepository);
+        when(userRepository.saveUser(any(User.class))).then(invocation -> {
+            final User user = invocation.getArgument(0, User.class);
+
+            assertEquals(registerForm.getUsername(), user.getUsername());
+            assertEquals(registerForm.getPassword(), user.getPassword());
+            assertEquals(registerForm.getEmail(), user.getEmail());
+
+            return user;
+        });
+        registerController.registerPerform(registerForm, mock(BindingResult.class), mock(Model.class));
+    }
+
+    @Test
+    void testFillProfileInfoFromRegisterForm() {
+        final User user = new User();
+        reset(profileRepository, userRepository);
+        when(userRepository.saveUser(any(User.class))).thenReturn(user);
+        when(profileRepository.save(any(Profile.class))).then(invocation -> {
+            final Profile profile = invocation.getArgument(0, Profile.class);
+
+            assertEquals(registerForm.getFirstName(), profile.getFirstName());
+            assertEquals(registerForm.getMiddleName(), profile.getMiddleName());
+            assertEquals(registerForm.getLastName(), profile.getLastName());
+            assertSame(user, profile.getUser());
+
+            return profile;
+        });
+        registerController.registerPerform(registerForm, mock(BindingResult.class), mock(Model.class));
     }
 
     private void testRegisterPostForExistingErrors() throws Exception {

@@ -85,6 +85,7 @@ public class RegisterController {
         final User user = new User();
 
         user.setUsername(registerForm.getUsername());
+        user.setEmail(registerForm.getEmail());
         user.setPassword(passwordEncoder.encode(registerForm.getPassword()));
         user.setRoles(Collections.singletonList(roleRepository.findByName("USER")));
         user.setCredentialsNonExpired(true);

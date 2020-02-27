@@ -38,3 +38,16 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: users
             validate: true
+  - changeSet:
+      id: addEmailToUsersTable
+      author: xaero
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                    unique: true

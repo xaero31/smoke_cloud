@@ -61,6 +61,6 @@
     <button type="submit" th:text="${'Register'}">Register</button>
 </form>
 <p style="color: red" th:if="${registerError != null}" th:text="${registerError}"></p>
-<a th:href="@{${T(com.ermakov.nikita.ControllerPath).LOGIN}}" th:text="${''}">Back to login page</a>
+<a th:href="@{${T(com.ermakov.nikita.ControllerPath).LOGIN}}" th:text="${'Back to login page'}"></a>
 </body>
 </html>

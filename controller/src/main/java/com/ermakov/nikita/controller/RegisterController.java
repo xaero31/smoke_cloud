@@ -3,11 +3,13 @@ package com.ermakov.nikita.controller;
 import com.ermakov.nikita.ControllerPath;
 import com.ermakov.nikita.ViewName;
 import com.ermakov.nikita.entity.profile.Profile;
+import com.ermakov.nikita.entity.profile.VerificationToken;
 import com.ermakov.nikita.entity.security.User;
 import com.ermakov.nikita.event.RegisterEvent;
 import com.ermakov.nikita.model.RegisterForm;
 import com.ermakov.nikita.repository.RoleRepository;
 import com.ermakov.nikita.repository.UserRepository;
+import com.ermakov.nikita.repository.VerificationTokenRepository;
 import com.ermakov.nikita.service.api.ProfileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.time.Instant;
 import java.util.Collections;
 
 /**
@@ -35,6 +38,7 @@ public class RegisterController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ProfileService profileService;
+    private final VerificationTokenRepository tokenRepository;
 
     private final ApplicationEventPublisher eventPublisher;
     private final PasswordEncoder passwordEncoder;
@@ -42,11 +46,13 @@ public class RegisterController {
     public RegisterController(@Autowired UserRepository userRepository,
                               @Autowired RoleRepository roleRepository,
                               @Autowired ProfileService profileService,
+                              @Autowired VerificationTokenRepository tokenRepository,
                               @Autowired PasswordEncoder passwordEncoder,
                               @Autowired ApplicationEventPublisher eventPublisher) {
         this.userRepository = userRepository;
         this.profileService = profileService;
         this.roleRepository = roleRepository;
+        this.tokenRepository = tokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.eventPublisher = eventPublisher;
     }
@@ -83,8 +89,25 @@ public class RegisterController {
     }
 
     @RequestMapping(path = ControllerPath.VERIFY_USER, method = RequestMethod.POST)
-    public String verifyUser(@RequestParam("token") String token) {
-        throw new UnsupportedOperationException("not implemented"); // todo
+    public String verifyUser(@RequestParam("token") String token,
+                             Model model) {
+        final VerificationToken verificationToken = tokenRepository.findByToken(token);
+        if (isTokenExpired(verificationToken)) {
+            log.info("Token {} is expired. User has not been verified", token);
+
+            model.addAttribute("error", "Verification link actual time is expired");
+            return ControllerPath.LOGIN;
+        }
+
+        final User user = userRepository.findById(verificationToken.getUser().getId());
+
+        user.setEnabled(true);
+        userRepository.save(user);
+
+        log.info("User {} was verified", user.getUsername());
+        model.addAttribute("success", "Account was verified successfully");
+
+        return ControllerPath.LOGIN;
     }
 
     private User saveUser(RegisterForm registerForm) {
@@ -98,7 +121,7 @@ public class RegisterController {
         user.setNonExpired(true);
         user.setNonLocked(true);
 
-        return userRepository.saveUser(user);
+        return userRepository.saveUniqueUser(user);
     }
 
     private void saveProfile(RegisterForm registerForm, User user) {
@@ -110,5 +133,12 @@ public class RegisterController {
         profile.setMiddleName(registerForm.getMiddleName());
 
         profileService.save(profile);
+    }
+
+    private boolean isTokenExpired(VerificationToken token) {
+        final Instant expireInstant = token.getExpirationDate().toInstant();
+        final Instant now = Instant.now();
+
+        return now.isAfter(expireInstant);
     }
 }

@@ -2,6 +2,7 @@ package com.ermakov.nikita.repository;
 
 import com.ermakov.nikita.entity.security.Role;
 import com.ermakov.nikita.entity.security.User;
+import com.ermakov.nikita.repository.custom.UserRepositoryCustomImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +20,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserRepositoryTest {
+public class UserRepositoryCustomImplTest {
 
     @Mock
     private EntityManager entityManager;
@@ -28,11 +29,11 @@ public class UserRepositoryTest {
     @SuppressWarnings("rawtypes")
     private TypedQuery typedQuery;
 
-    private UserRepository userRepository;
+    private UserRepositoryCustomImpl userRepository;
 
     @BeforeEach
     void before() {
-        userRepository = new UserRepository(entityManager);
+        userRepository = new UserRepositoryCustomImpl(entityManager);
     }
 
     @Test
@@ -58,7 +59,7 @@ public class UserRepositoryTest {
     @Test
     void saveNewUserTest() {
         setMocksForNoExistingUser();
-        userRepository.saveUser(new User());
+        userRepository.saveUniqueUser(new User());
         verify(entityManager).persist(any(User.class));
     }
 
@@ -66,7 +67,7 @@ public class UserRepositoryTest {
     void whenSavingExistingUserRepositoryShouldThrowAnException() {
         setMocksForNoExistingUser();
         doThrow(EntityExistsException.class).when(entityManager).persist(any(User.class));
-        assertThrows(EntityExistsException.class, () -> userRepository.saveUser(new User()));
+        assertThrows(EntityExistsException.class, () -> userRepository.saveUniqueUser(new User()));
     }
 
     @SuppressWarnings("unchecked")

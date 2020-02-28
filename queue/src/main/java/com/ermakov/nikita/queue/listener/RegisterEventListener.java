@@ -64,6 +64,6 @@ public class RegisterEventListener {
 
     private Date createExpirationDate() {
         final Instant expirationInstant = Instant.now().plus(1L, ChronoUnit.DAYS);
-        return new Date(expirationInstant.getEpochSecond());
+        return Date.from(expirationInstant);
     }
 }

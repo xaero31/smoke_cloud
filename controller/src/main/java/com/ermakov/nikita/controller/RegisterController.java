@@ -86,7 +86,7 @@ public class RegisterController {
         }
     }
 
-    @RequestMapping(path = ControllerPath.VERIFY_USER, method = RequestMethod.POST)
+    @RequestMapping(path = ControllerPath.VERIFY_USER, method = RequestMethod.GET)
     public String verifyUser(@RequestParam("token") String token,
                              Model model) {
         final VerificationToken verificationToken = tokenRepository.findByToken(token);

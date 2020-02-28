@@ -90,6 +90,13 @@ public class RegisterController {
     public String verifyUser(@RequestParam("token") String token,
                              Model model) {
         final VerificationToken verificationToken = tokenRepository.findByToken(token);
+        if (verificationToken == null) {
+            log.info("Token {} does not exist", token);
+
+            model.addAttribute("error", "Verification token does not exist");
+            return ControllerPath.LOGIN;
+        }
+
         if (isTokenExpired(verificationToken)) {
             log.info("Token {} is expired. User has not been verified", token);
 

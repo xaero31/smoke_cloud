@@ -393,6 +393,18 @@ public class RegisterControllerTest {
         verify(model).addAttribute(eq("error"), anyString());
     }
 
+    @Test
+    void registerControllerShouldReturnErrorWhenTokenDoesNotExist() {
+        final Model model = mock(Model.class);
+
+        when(tokenRepository.findByToken(anyString())).thenReturn(null);
+
+        registerController.verifyUser("token", model);
+
+        verify(userRepository, never()).save(any(User.class));
+        verify(model).addAttribute(eq("error"), anyString());
+    }
+
     private void testRegisterPostForExistingErrors() throws Exception {
         mockMvc.perform(post("/register")
                 .flashAttr("registerForm", registerForm)

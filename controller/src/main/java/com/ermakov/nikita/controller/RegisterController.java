@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.time.Instant;
 import java.util.Collections;
@@ -63,7 +62,6 @@ public class RegisterController {
         return ViewName.REGISTER;
     }
 
-    @Transactional
     @RequestMapping(path = ControllerPath.REGISTER, method = RequestMethod.POST)
     public String registerPerform(@ModelAttribute @Valid RegisterForm registerForm,
                                   BindingResult result,

@@ -7,6 +7,7 @@ import com.ermakov.nikita.entity.security.Role;
 import com.ermakov.nikita.entity.security.User;
 import com.ermakov.nikita.event.RegisterEvent;
 import com.ermakov.nikita.model.RegisterForm;
+import com.ermakov.nikita.queue.listener.RegisterEventListener;
 import com.ermakov.nikita.repository.ProfileRepository;
 import com.ermakov.nikita.repository.RoleRepository;
 import com.ermakov.nikita.repository.UserRepository;
@@ -14,11 +15,11 @@ import com.ermakov.nikita.repository.VerificationTokenRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -48,6 +49,8 @@ public class RegisterControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
+    private RegisterEventListener registerEventListener;
+    @MockBean
     private UserRepository userRepository;
     @MockBean
     private RoleRepository roleRepository;
@@ -56,11 +59,10 @@ public class RegisterControllerTest {
     @MockBean
     private VerificationTokenRepository tokenRepository;
     @MockBean
-    private ApplicationEventPublisher applicationEventPublisher;
-    @MockBean
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    @InjectMocks
     private RegisterController registerController;
     private RegisterForm registerForm;
 
@@ -98,9 +100,9 @@ public class RegisterControllerTest {
 
     @Test
     void registerPostShouldPublishRegisterEvent() throws Exception {
-        doNothing().when(applicationEventPublisher).publishEvent(any(RegisterEvent.class));
+        doNothing().when(registerEventListener).sendMailConfirmingNotification(any(RegisterEvent.class));
         testRegisterPostForNotExistingErrors();
-        verify(applicationEventPublisher, atLeastOnce()).publishEvent(any(RegisterEvent.class));
+        verify(registerEventListener, atLeastOnce()).sendMailConfirmingNotification(any(RegisterEvent.class));
     }
 
     private void testRegisterPostForNotExistingErrors() throws Exception {

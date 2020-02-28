@@ -61,6 +61,8 @@ public class RegisterEventListenerTest {
             assertSame(user, invocation.getArgument(0, VerificationToken.class).getUser());
             return invocation.getArgument(0);
         });
+
+        eventListener.sendMailConfirmingNotification(new RegisterEvent(this, user));
     }
 
     @Test

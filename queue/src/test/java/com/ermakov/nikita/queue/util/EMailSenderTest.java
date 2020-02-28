@@ -35,6 +35,13 @@ public class EMailSenderTest {
     @BeforeEach
     void before() {
         eMailSender = new EMailSender(javaMailSender, servletContext);
+
+        eMailSender.setHost("localhost");
+        eMailSender.setPort("80");
+        eMailSender.setSubject("mail subject");
+        eMailSender.setText("Some email text with url: {URL}");
+
+        lenient().when(servletContext.getContextPath()).thenReturn("/smoke-cloud");
     }
 
     @Test
@@ -74,7 +81,7 @@ public class EMailSenderTest {
 
         final String messageText = mailMessageCaptor.getValue().getText();
         assertNotNull(messageText, "Text of mail could be filled");
-        assertTrue(messageText.contains("http://localhost:80/smoke-cloud/registrationConfirm?tokenExample"),
+        assertTrue(messageText.contains("http://localhost:80/smoke-cloud/verifyUser?token=tokenExample"),
                 "Text of mail could contain registration confirming url");
     }
 

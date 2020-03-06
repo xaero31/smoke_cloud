@@ -40,7 +40,7 @@ public class RegisterEventListener {
         final User user = event.getUser();
         final VerificationToken token = createToken(user);
 
-        tokenRepository.save(token);
+        saveToken(token);
         log.info("Token for user {} was saved. uuid: {}", user.getUsername(), event.getUuid());
 
         eMailSender.sendVerifyMessage(user, token);
@@ -60,6 +60,36 @@ public class RegisterEventListener {
         token.setExpirationDate(createExpirationDate());
 
         return token;
+    }
+
+    private void saveToken(VerificationToken token) {
+        while (tokenUnavailableToSave(token)) {
+            token.setToken(UUID.randomUUID().toString());
+        }
+
+        tokenRepository.save(token);
+    }
+
+    private boolean tokenUnavailableToSave(VerificationToken tokenObject) {
+        final VerificationToken foundToken = tokenRepository.findByToken(tokenObject.getToken());
+
+        if (foundToken == null) {
+            return false;
+        }
+
+        if (tokenNotExpired(foundToken)) {
+            return true;
+        }
+
+        tokenRepository.delete(foundToken); // Remove expired token from db
+        return false;
+    }
+
+    private boolean tokenNotExpired(VerificationToken token) {
+        final Instant expireInstant = token.getExpirationDate().toInstant();
+        final Instant now = Instant.now();
+
+        return now.isBefore(expireInstant);
     }
 
     private Date createExpirationDate() {

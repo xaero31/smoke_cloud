@@ -94,14 +94,14 @@ public class RegisterController {
             log.info("Token {} does not exist", token);
 
             model.addAttribute("error", "Verification token does not exist");
-            return ControllerPath.LOGIN;
+            return ViewName.LOGIN;
         }
 
         if (isTokenExpired(verificationToken)) {
             log.info("Token {} is expired. User has not been verified", token);
 
             model.addAttribute("error", "Verification link actual time is expired");
-            return ControllerPath.LOGIN;
+            return ViewName.LOGIN;
         }
 
         final User user = userRepository.findById(verificationToken.getUser().getId());
@@ -112,7 +112,7 @@ public class RegisterController {
         log.info("User {} was verified", user.getUsername());
         model.addAttribute("success", "Account was verified successfully");
 
-        return ControllerPath.LOGIN;
+        return ViewName.LOGIN;
     }
 
     private User saveUser(RegisterForm registerForm) {

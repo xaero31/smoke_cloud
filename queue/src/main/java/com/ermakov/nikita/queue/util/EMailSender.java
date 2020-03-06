@@ -24,7 +24,6 @@ import javax.servlet.ServletContext;
 public class EMailSender {
 
     private static final String URL_MATCHER = "{URL}";
-    private static final String SMOKE_CLOUD_FROM = "smoke-cloud@register.com";
 
     private final JavaMailSender javaMailSender;
     private final ServletContext servletContext;
@@ -41,6 +40,9 @@ public class EMailSender {
     @Value("${verify.message.subject}")
     private String subject;
 
+    @Value("${mail.from}")
+    private String from;
+
     public EMailSender(@Autowired JavaMailSender javaMailSender,
                        @Autowired ServletContext servletContext) {
         this.javaMailSender = javaMailSender;
@@ -51,7 +53,7 @@ public class EMailSender {
         final SimpleMailMessage message = new SimpleMailMessage();
 
         message.setTo(user.getEmail());
-        message.setFrom(SMOKE_CLOUD_FROM);
+        message.setFrom(from);
         message.setSubject(subject);
         message.setText(createVerificationText(token));
 

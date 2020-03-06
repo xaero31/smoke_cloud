@@ -63,14 +63,14 @@ public class RegisterEventListener {
     }
 
     private void saveToken(VerificationToken token) {
-        while (tokenUnavailableToSave(token)) {
+        while (tokenExistsAndNotExpired(token)) {
             token.setToken(UUID.randomUUID().toString());
         }
 
         tokenRepository.save(token);
     }
 
-    private boolean tokenUnavailableToSave(VerificationToken tokenObject) {
+    private boolean tokenExistsAndNotExpired(VerificationToken tokenObject) {
         final VerificationToken foundToken = tokenRepository.findByToken(tokenObject.getToken());
 
         if (foundToken == null) {
@@ -81,6 +81,7 @@ public class RegisterEventListener {
             return true;
         }
 
+        // Not update by saving with existing id for more code readability
         tokenRepository.delete(foundToken); // Remove expired token from db
         return false;
     }

@@ -10,5 +10,6 @@ dependencies {
     implementation project(':security')
     implementation project(':service')
 
+    testImplementation project(':queue')
     testImplementation project(':application')
 }

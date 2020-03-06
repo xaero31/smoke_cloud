@@ -2,6 +2,7 @@ package com.ermakov.nikita.repository;
 
 import com.ermakov.nikita.entity.security.Role;
 import com.ermakov.nikita.entity.security.User;
+import com.ermakov.nikita.repository.custom.UserRepositoryCustomImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +20,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserRepositoryTest {
+public class UserRepositoryCustomImplTest {
 
     @Mock
     private EntityManager entityManager;
@@ -28,27 +29,29 @@ public class UserRepositoryTest {
     @SuppressWarnings("rawtypes")
     private TypedQuery typedQuery;
 
-    private UserRepository userRepository;
+    private UserRepositoryCustomImpl userRepository;
 
     @BeforeEach
-    void before() {
-        userRepository = new UserRepository(entityManager);
-    }
-
-    @Test
-    void whenNotFoundUser_throwsNoResultException() {
-        setMocksForNoExistingUser();
-        assertNull(userRepository.findByUsername("username"));
-    }
-
-    @Test
     @SuppressWarnings("unchecked")
-    void whenFoundUser_returnUserObject() {
-        final User user = new User();
+    void before() {
+        userRepository = new UserRepositoryCustomImpl(entityManager);
 
         when(entityManager.createQuery(anyString(), any())).thenReturn(typedQuery);
         when(typedQuery.setParameter(anyInt(), any())).thenReturn(typedQuery);
         when(typedQuery.setHint(anyString(), anyBoolean())).thenReturn(typedQuery);
+    }
+
+    @Test
+    void whenNotFoundUser_throwsNoResultException() {
+        when(typedQuery.getSingleResult()).thenThrow(NoResultException.class);
+
+        assertNull(userRepository.findByUsername("username"));
+    }
+
+    @Test
+    void whenFoundUser_returnUserObject() {
+        final User user = new User();
+
         when(typedQuery.getSingleResult()).thenReturn(user);
         when(typedQuery.getResultList()).thenReturn(Collections.singletonList(new Role()));
 
@@ -57,23 +60,18 @@ public class UserRepositoryTest {
 
     @Test
     void saveNewUserTest() {
-        setMocksForNoExistingUser();
-        userRepository.saveUser(new User());
+        when(typedQuery.getSingleResult()).thenThrow(NoResultException.class);
+
+        userRepository.saveUniqueUser(new User());
         verify(entityManager).persist(any(User.class));
     }
 
     @Test
     void whenSavingExistingUserRepositoryShouldThrowAnException() {
-        setMocksForNoExistingUser();
+        when(typedQuery.getSingleResult()).thenThrow(NoResultException.class);
         doThrow(EntityExistsException.class).when(entityManager).persist(any(User.class));
-        assertThrows(EntityExistsException.class, () -> userRepository.saveUser(new User()));
+
+        assertThrows(EntityExistsException.class, () -> userRepository.saveUniqueUser(new User()));
     }
 
-    @SuppressWarnings("unchecked")
-    private void setMocksForNoExistingUser() {
-        when(entityManager.createQuery(anyString(), any())).thenReturn(typedQuery);
-        when(typedQuery.setParameter(anyInt(), any())).thenReturn(typedQuery);
-        when(typedQuery.setHint(anyString(), anyBoolean())).thenReturn(typedQuery);
-        when(typedQuery.getSingleResult()).thenThrow(NoResultException.class);
-    }
 }

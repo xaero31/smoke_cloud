@@ -21,6 +21,13 @@ public class RegisterForm {
     @Pattern(regexp = "[a-zA-Z0-9]*", message = "Username should contains only letters and numbers")
     private String username;
 
+    @NotEmpty(message = "Email couldn't be empty")
+    @NotNull(message = "Email couldn't be null")
+    @Size(max = 50, message = "Email size should be less than {max} symbols")
+    @Pattern(regexp = "[a-zA-Z0-9\\-_.]+@[a-z0-9]{3,}\\.[a-z]{2,}",
+            message = "Email should look like 'email@mail.com'")
+    private String email;
+
     @NotEmpty(message = "Password couldn't be empty")
     @NotNull(message = "Password couldn't be null")
     @Size(min = 6, max = 255, message = "Password size should be between {min} and {max} symbols")

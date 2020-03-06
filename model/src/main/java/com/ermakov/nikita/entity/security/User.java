@@ -25,6 +25,9 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
+
     @ManyToMany
     @JoinTable(
             name = "users_roles",

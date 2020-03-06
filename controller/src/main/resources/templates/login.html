@@ -19,5 +19,7 @@
         </tr>
     </table>
 </form>
+<p style="color: red" th:if="${error != null}" th:text="${error}"></p>
+<p style="color: green" th:if="${success != null}" th:text="${success}"></p>
 </body>
 </html>

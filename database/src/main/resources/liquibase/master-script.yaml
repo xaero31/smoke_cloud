@@ -5,3 +5,6 @@ databaseChangeLog:
   - include:
       relativeToChangelogFile: true
       file: add-roles-security-model.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: add-register-mail-confirm.yaml

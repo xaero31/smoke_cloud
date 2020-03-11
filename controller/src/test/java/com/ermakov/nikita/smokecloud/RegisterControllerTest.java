@@ -15,6 +15,7 @@ import com.ermakov.nikita.repository.VerificationTokenRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -66,6 +67,9 @@ public class RegisterControllerTest {
     private RegisterController registerController;
     private RegisterForm registerForm;
 
+    private ArgumentCaptor<User> userCaptor;
+    private ArgumentCaptor<Profile> profileCaptor;
+
     @BeforeEach
     void before() {
         registerForm = new RegisterForm();
@@ -82,6 +86,9 @@ public class RegisterControllerTest {
         lenient().when(roleRepository.findByName(anyString())).thenReturn(new Role());
         lenient().when(profileRepository.save(any(Profile.class))).thenReturn(new Profile());
         lenient().when(passwordEncoder.encode(anyString())).then(invocation -> invocation.getArgument(0));
+
+        userCaptor = ArgumentCaptor.forClass(User.class);
+        profileCaptor = ArgumentCaptor.forClass(Profile.class);
     }
 
     @Test
@@ -319,16 +326,14 @@ public class RegisterControllerTest {
     @Test
     void testFillUserInfoFromRegisterForm() {
         reset(userRepository);
-        when(userRepository.saveUniqueUser(any(User.class))).then(invocation -> {
-            final User user = invocation.getArgument(0, User.class);
 
-            assertEquals(registerForm.getUsername(), user.getUsername());
-            assertEquals(registerForm.getPassword(), user.getPassword());
-            assertEquals(registerForm.getEmail(), user.getEmail());
-
-            return user;
-        });
         registerController.registerPerform(registerForm, mock(BindingResult.class), mock(Model.class));
+
+        verify(userRepository, atLeastOnce()).saveUniqueUser(userCaptor.capture());
+
+        assertEquals(registerForm.getUsername(), userCaptor.getValue().getUsername());
+        assertEquals(registerForm.getPassword(), userCaptor.getValue().getPassword());
+        assertEquals(registerForm.getEmail(), userCaptor.getValue().getEmail());
     }
 
     @Test
@@ -336,17 +341,15 @@ public class RegisterControllerTest {
         final User user = new User();
         reset(profileRepository, userRepository);
         when(userRepository.saveUniqueUser(any(User.class))).thenReturn(user);
-        when(profileRepository.save(any(Profile.class))).then(invocation -> {
-            final Profile profile = invocation.getArgument(0, Profile.class);
 
-            assertEquals(registerForm.getFirstName(), profile.getFirstName());
-            assertEquals(registerForm.getMiddleName(), profile.getMiddleName());
-            assertEquals(registerForm.getLastName(), profile.getLastName());
-            assertSame(user, profile.getUser());
-
-            return profile;
-        });
         registerController.registerPerform(registerForm, mock(BindingResult.class), mock(Model.class));
+
+        verify(profileRepository, atLeastOnce()).save(profileCaptor.capture());
+
+        assertEquals(registerForm.getFirstName(), profileCaptor.getValue().getFirstName());
+        assertEquals(registerForm.getMiddleName(), profileCaptor.getValue().getMiddleName());
+        assertEquals(registerForm.getLastName(), profileCaptor.getValue().getLastName());
+        assertSame(user, profileCaptor.getValue().getUser());
     }
 
     @Test

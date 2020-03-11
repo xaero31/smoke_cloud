@@ -30,8 +30,9 @@ public class ProfileServiceTest {
     @BeforeEach
     void before() {
         profileService = new ProfileServiceImpl(profileRepository);
-        when(profileRepository.save(any(Profile.class))).then(invocation -> invocation.getArgument(0));
         profile = new Profile();
+
+        when(profileRepository.save(any(Profile.class))).then(invocation -> invocation.getArgument(0));
     }
 
     @Test

@@ -53,6 +53,7 @@ public class DatabaseUserPrincipalTest {
         final List<String> exceptedAuthorities = privilegeList.stream()
                 .map(Privilege::getName)
                 .collect(Collectors.toList());
+
         assertTrue(exceptedAuthorities.containsAll(authoritiesFromPrincipal));
     }
 

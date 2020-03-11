@@ -12,7 +12,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 
@@ -47,30 +46,24 @@ public class RegisterEventListenerTest {
 
     @Test
     void registerEventListenerShouldAddExpirationDeltaToToken() {
-        final Instant currentInstant = Instant.now();
-        when(verificationTokenRepository.save(any(VerificationToken.class))).then(invocation -> {
-            final Instant expirationInstant = invocation.getArgument(0, VerificationToken.class)
-                    .getExpirationDate()
-                    .toInstant();
-            final long hoursToExpire = Duration.between(currentInstant, expirationInstant).toHours();
-
-            assertEquals(24L, hoursToExpire);
-
-            return invocation.getArgument(0);
-        });
-
         eventListener.sendMailConfirmingNotification(new RegisterEvent(this, new User()));
+
+        verify(verificationTokenRepository, atLeastOnce()).save(tokenCaptor.capture());
+
+        final Instant currentInstant = Instant.now();
+        final Instant expirationInstant = tokenCaptor.getValue().getExpirationDate().toInstant();
+
+        assertTrue(expirationInstant.isAfter(currentInstant));
     }
 
     @Test
     void registerEventListenerShouldSaveTokenToRegisteringUser() {
         final User user = new User();
-        when(verificationTokenRepository.save(any(VerificationToken.class))).then(invocation -> {
-            assertSame(user, invocation.getArgument(0, VerificationToken.class).getUser());
-            return invocation.getArgument(0);
-        });
 
         eventListener.sendMailConfirmingNotification(new RegisterEvent(this, user));
+
+        verify(verificationTokenRepository, atLeastOnce()).save(tokenCaptor.capture());
+        assertSame(user, tokenCaptor.getValue().getUser());
     }
 
     @Test

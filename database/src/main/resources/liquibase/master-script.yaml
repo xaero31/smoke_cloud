@@ -8,3 +8,6 @@ databaseChangeLog:
   - include:
       relativeToChangelogFile: true
       file: add-register-mail-confirm.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: populate-test-data.yaml

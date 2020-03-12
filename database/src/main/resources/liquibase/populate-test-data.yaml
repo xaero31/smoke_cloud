@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: insertTestUser
+      author: xaero
+      context: embeddedDB
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: testuser
+              - column:
+                  name: password
+                  value: $2a$10$3eBoy9GJDfpVb1W0sTbCyuSlUjO3MvlyHhNcVwWTnTkqgfdVLyka2
+  - changeSet:
+      id: setRoleToTestUser
+      author: xaero
+      context: embeddedDB
+      changes:
+        sql: >-
+          INSERT INTO users_roles (user_id, role_id) VALUES (
+          (SELECT id FROM users WHERE username = 'testuser'),
+          (SELECT id FROM roles WHERE name = 'USER'))

@@ -170,15 +170,6 @@ databaseChangeLog:
           (SELECT id FROM roles WHERE name = 'USER'),
           (SELECT id FROM privileges WHERE name = 'WRITE'))
   - changeSet:
-      id: setRoleToTestUser
-      author: xaero
-      context: embeddedDB
-      changes:
-        sql: >-
-          INSERT INTO users_roles (user_id, role_id) VALUES (
-          (SELECT id FROM users WHERE username = 'testuser'),
-          (SELECT id FROM roles WHERE name = 'USER'))
-  - changeSet:
       id: addUserStatusColumns
       author: xaero
       changes:

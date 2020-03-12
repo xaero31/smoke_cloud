@@ -68,17 +68,3 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: users
             validate: true
-  - changeSet:
-      id: insertTestUser
-      author: xaero
-      context: embeddedDB
-      changes:
-        - insert:
-            tableName: users
-            columns:
-              - column:
-                  name: username
-                  value: testuser
-              - column:
-                  name: password
-                  value: $2a$10$3eBoy9GJDfpVb1W0sTbCyuSlUjO3MvlyHhNcVwWTnTkqgfdVLyka2

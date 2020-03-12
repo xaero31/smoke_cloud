@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  *
  * todo remove after. Controller for testing some things
  */
-@Controller
+@Controller("mainController")
 public class MainController {
 
     @GetMapping("/welcome")

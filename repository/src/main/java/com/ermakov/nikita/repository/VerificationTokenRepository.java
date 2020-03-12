@@ -6,6 +6,7 @@ import org.springframework.data.repository.Repository;
 /**
  * created by Nikita_Ermakov at 2/25/2020
  */
+@org.springframework.stereotype.Repository("verificationTokenRepository")
 public interface VerificationTokenRepository extends Repository<VerificationToken, Long> {
 
     VerificationToken findByToken(String token);

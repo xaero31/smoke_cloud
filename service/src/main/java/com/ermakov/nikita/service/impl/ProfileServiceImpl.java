@@ -5,17 +5,18 @@ import com.ermakov.nikita.repository.ProfileRepository;
 import com.ermakov.nikita.service.api.ProfileService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
  * created by Nikita_Ermakov at 2/21/2020
  */
-@Service
+@Service("profileService")
 public class ProfileServiceImpl implements ProfileService {
 
     private ProfileRepository profileRepository;
 
-    public ProfileServiceImpl(@Autowired ProfileRepository profileRepository) {
+    public ProfileServiceImpl(@Autowired @Qualifier("profileRepository") ProfileRepository profileRepository) {
         this.profileRepository = profileRepository;
     }
 

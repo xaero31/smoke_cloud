@@ -1,5 +1,6 @@
 package com.ermakov.nikita.entity.security;
 
+import com.ermakov.nikita.entity.profile.Profile;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -35,6 +36,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
     private Collection<Role> roles;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Profile profile;
 
     @Column(name = "non_expired", nullable = false)
     private boolean nonExpired;

@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.jpa.QueryHints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -17,7 +16,6 @@ import java.util.List;
  * created by Nikita_Ermakov at 2/16/2020
  */
 @Slf4j
-@Repository
 public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
     @Value("${user.repository.find.by.username.query}")

@@ -13,6 +13,7 @@ import com.ermakov.nikita.repository.VerificationTokenRepository;
 import com.ermakov.nikita.service.api.ProfileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -31,7 +32,7 @@ import java.util.Collections;
  * created by Nikita_Ermakov at 2/19/2020
  */
 @Slf4j
-@Controller
+@Controller("registerController")
 public class RegisterController {
 
     private final UserRepository userRepository;
@@ -42,11 +43,12 @@ public class RegisterController {
     private final ApplicationEventPublisher eventPublisher;
     private final PasswordEncoder passwordEncoder;
 
-    public RegisterController(@Autowired UserRepository userRepository,
-                              @Autowired RoleRepository roleRepository,
-                              @Autowired ProfileService profileService,
-                              @Autowired VerificationTokenRepository tokenRepository,
-                              @Autowired PasswordEncoder passwordEncoder,
+    public RegisterController(@Autowired @Qualifier("userRepository") UserRepository userRepository,
+                              @Autowired @Qualifier("roleRepository") RoleRepository roleRepository,
+                              @Autowired @Qualifier("profileService") ProfileService profileService,
+                              @Autowired @Qualifier("verificationTokenRepository")
+                                      VerificationTokenRepository tokenRepository,
+                              @Autowired @Qualifier("passwordEncoder") PasswordEncoder passwordEncoder,
                               @Autowired ApplicationEventPublisher eventPublisher) {
         this.userRepository = userRepository;
         this.profileService = profileService;

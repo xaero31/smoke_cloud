@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -63,6 +64,7 @@ public class RegisterControllerTest {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    @Qualifier("registerController")
     @InjectMocks
     private RegisterController registerController;
     private RegisterForm registerForm;

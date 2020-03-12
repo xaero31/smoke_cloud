@@ -7,6 +7,7 @@ import org.springframework.data.repository.Repository;
 /**
  * created by Nikita_Ermakov at 2/27/2020
  */
+@org.springframework.stereotype.Repository("userRepository")
 public interface UserRepository extends Repository<User, Long>, UserRepositoryCustom {
 
     User findById(long id);

@@ -7,6 +7,7 @@ import com.ermakov.nikita.queue.util.EMailSender;
 import com.ermakov.nikita.repository.VerificationTokenRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -20,14 +21,15 @@ import java.util.UUID;
  * created by Nikita_Ermakov at 2/25/2020
  */
 @Slf4j
-@Component
+@Component("registerEventListener")
 public class RegisterEventListener {
 
     private EMailSender eMailSender;
     private VerificationTokenRepository tokenRepository;
 
-    public RegisterEventListener(@Autowired VerificationTokenRepository tokenRepository,
-                                 @Autowired EMailSender eMailSender) {
+    public RegisterEventListener(@Autowired @Qualifier("verificationTokenRepository")
+                                         VerificationTokenRepository tokenRepository,
+                                 @Autowired @Qualifier("eMailSender") EMailSender eMailSender) {
         this.tokenRepository = tokenRepository;
         this.eMailSender = eMailSender;
     }

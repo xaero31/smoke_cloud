@@ -38,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         registry.addViewController("/login").setViewName("login");
     }
 
-    @Bean
+    @Bean("passwordEncoder")
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }

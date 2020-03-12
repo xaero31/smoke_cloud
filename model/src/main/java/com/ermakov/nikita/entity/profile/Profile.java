@@ -18,7 +18,7 @@ public class Profile {
     @Column(name = "id", unique = true, nullable = false, updatable = false)
     private long id;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "user_id", unique = true, nullable = false, updatable = false)
     private User user;
 

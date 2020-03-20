@@ -81,7 +81,7 @@ public class RegisterController {
         final User user = saveUser(registerForm);
         if (user != null) {
             saveProfile(registerForm, user);
-            eventPublisher.publishEvent(new RegisterEvent(this, user));
+            eventPublisher.publishEvent(new RegisterEvent(this, user, locale));
 
             log.info("Registered new user: {}", user.getUsername());
             return ControllerPath.REDIRECT + ControllerPath.LOGIN;

@@ -8,11 +8,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.MessageSource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import javax.servlet.ServletContext;
 import java.util.Arrays;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,23 +32,28 @@ public class EMailSenderTest {
     @Mock
     private ServletContext servletContext;
 
+    @Mock
+    private MessageSource messageSource;
+
     private EMailSender eMailSender;
 
     @BeforeEach
     void before() {
-        eMailSender = new EMailSender(javaMailSender, servletContext);
+        eMailSender = new EMailSender(javaMailSender, servletContext, messageSource);
 
         eMailSender.setHost("localhost");
         eMailSender.setPort("80");
-        eMailSender.setSubject("mail subject");
-        eMailSender.setText("Some email text with url: {URL}");
 
         lenient().when(servletContext.getContextPath()).thenReturn("/smoke-cloud");
+        lenient().when(messageSource.getMessage(eq("verify.message.text"), any(), nullable(Locale.class)))
+                .thenReturn("Some email text with url: {URL}");
+        lenient().when(messageSource.getMessage(eq("verify.message.subject"), any(), nullable(Locale.class)))
+                .thenReturn("mail subject");
     }
 
     @Test
     void eMailSenderShouldInvokeJavaMailSenderSend() {
-        eMailSender.sendVerifyMessage(new User(), new VerificationToken());
+        eMailSender.sendVerifyMessage(new User(), new VerificationToken(), null);
         verify(javaMailSender, times(1)).send(any(SimpleMailMessage.class));
     }
 
@@ -58,7 +65,7 @@ public class EMailSenderTest {
         final ArgumentCaptor<SimpleMailMessage> mailMessageCaptor = ArgumentCaptor.forClass(SimpleMailMessage.class);
         doNothing().when(javaMailSender).send(mailMessageCaptor.capture());
 
-        eMailSender.sendVerifyMessage(user, new VerificationToken());
+        eMailSender.sendVerifyMessage(user, new VerificationToken(), null);
 
         final String[] recipients = mailMessageCaptor.getValue().getTo();
         assertNotNull(recipients, "'To' in output message could be filled");
@@ -77,7 +84,7 @@ public class EMailSenderTest {
         final ArgumentCaptor<SimpleMailMessage> mailMessageCaptor = ArgumentCaptor.forClass(SimpleMailMessage.class);
         doNothing().when(javaMailSender).send(mailMessageCaptor.capture());
 
-        eMailSender.sendVerifyMessage(new User(), token);
+        eMailSender.sendVerifyMessage(new User(), token, null);
 
         final String messageText = mailMessageCaptor.getValue().getText();
         assertNotNull(messageText, "Text of mail could be filled");
@@ -90,7 +97,7 @@ public class EMailSenderTest {
         final ArgumentCaptor<SimpleMailMessage> mailMessageCaptor = ArgumentCaptor.forClass(SimpleMailMessage.class);
         doNothing().when(javaMailSender).send(mailMessageCaptor.capture());
 
-        eMailSender.sendVerifyMessage(new User(), new VerificationToken());
+        eMailSender.sendVerifyMessage(new User(), new VerificationToken(), null);
 
         final String subject = mailMessageCaptor.getValue().getSubject();
         assertNotNull(subject, "Mail subject could be filled");

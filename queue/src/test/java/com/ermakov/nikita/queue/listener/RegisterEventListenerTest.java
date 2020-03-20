@@ -46,7 +46,7 @@ public class RegisterEventListenerTest {
 
     @Test
     void registerEventListenerShouldAddExpirationDeltaToToken() {
-        eventListener.sendMailConfirmingNotification(new RegisterEvent(this, new User()));
+        eventListener.sendMailConfirmingNotification(new RegisterEvent(this, new User(), null));
 
         verify(verificationTokenRepository, atLeastOnce()).save(tokenCaptor.capture());
 
@@ -60,7 +60,7 @@ public class RegisterEventListenerTest {
     void registerEventListenerShouldSaveTokenToRegisteringUser() {
         final User user = new User();
 
-        eventListener.sendMailConfirmingNotification(new RegisterEvent(this, user));
+        eventListener.sendMailConfirmingNotification(new RegisterEvent(this, user, null));
 
         verify(verificationTokenRepository, atLeastOnce()).save(tokenCaptor.capture());
         assertSame(user, tokenCaptor.getValue().getUser());
@@ -69,7 +69,7 @@ public class RegisterEventListenerTest {
     @Test
     void registerEventListenerShouldThrowAnExceptionWithNullUser() {
         assertThrows(IllegalArgumentException.class,
-                () -> eventListener.sendMailConfirmingNotification(new RegisterEvent(this, null)));
+                () -> eventListener.sendMailConfirmingNotification(new RegisterEvent(this, null, null)));
     }
 
     @Test
@@ -79,7 +79,7 @@ public class RegisterEventListenerTest {
 
         when(verificationTokenRepository.findByToken(anyString())).thenReturn(existingToken).thenReturn(null);
 
-        eventListener.sendMailConfirmingNotification(new RegisterEvent(this, new User()));
+        eventListener.sendMailConfirmingNotification(new RegisterEvent(this, new User(), null));
 
         verify(verificationTokenRepository, atLeastOnce()).findByToken(stringCaptor.capture());
         verify(verificationTokenRepository, atLeastOnce()).save(tokenCaptor.capture());
@@ -89,7 +89,7 @@ public class RegisterEventListenerTest {
 
     @Test
     void ifTokenDoesNotExistItSavesInstant() {
-        eventListener.sendMailConfirmingNotification(new RegisterEvent(this, new User()));
+        eventListener.sendMailConfirmingNotification(new RegisterEvent(this, new User(), null));
 
         verify(verificationTokenRepository, times(1)).findByToken(stringCaptor.capture());
         verify(verificationTokenRepository, times(1)).save(tokenCaptor.capture());
@@ -102,7 +102,7 @@ public class RegisterEventListenerTest {
 
         when(verificationTokenRepository.findByToken(anyString())).thenReturn(expiredToken);
 
-        eventListener.sendMailConfirmingNotification(new RegisterEvent(this, new User()));
+        eventListener.sendMailConfirmingNotification(new RegisterEvent(this, new User(), null));
 
         verify(verificationTokenRepository, times(1)).findByToken(anyString());
         verify(verificationTokenRepository, times(1)).delete(expiredToken);

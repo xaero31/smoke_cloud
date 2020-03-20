@@ -19,7 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/register", "/verifyUser")
+                .antMatchers("/register", "/verifyUser", "/login/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

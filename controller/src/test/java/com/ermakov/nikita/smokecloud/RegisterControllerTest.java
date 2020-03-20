@@ -329,7 +329,7 @@ public class RegisterControllerTest {
     void testFillUserInfoFromRegisterForm() {
         reset(userRepository);
 
-        registerController.registerPerform(registerForm, mock(BindingResult.class), mock(Model.class));
+        registerController.registerPerform(registerForm, mock(BindingResult.class), mock(Model.class), null);
 
         verify(userRepository, atLeastOnce()).saveUniqueUser(userCaptor.capture());
 
@@ -344,7 +344,7 @@ public class RegisterControllerTest {
         reset(profileRepository, userRepository);
         when(userRepository.saveUniqueUser(any(User.class))).thenReturn(user);
 
-        registerController.registerPerform(registerForm, mock(BindingResult.class), mock(Model.class));
+        registerController.registerPerform(registerForm, mock(BindingResult.class), mock(Model.class), null);
 
         verify(profileRepository, atLeastOnce()).save(profileCaptor.capture());
 

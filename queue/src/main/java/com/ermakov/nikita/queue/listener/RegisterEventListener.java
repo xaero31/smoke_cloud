@@ -45,7 +45,7 @@ public class RegisterEventListener {
         saveToken(token);
         log.info("Token for user {} was saved. uuid: {}", user.getUsername(), event.getUuid());
 
-        eMailSender.sendVerifyMessage(user, token);
+        eMailSender.sendVerifyMessage(user, token, event.getLocale());
         log.info("Verification email for user {} with token {} was sent to {}. uuid: {}",
                 user.getUsername(), token.getToken(), user.getEmail(), event.getUuid());
     }

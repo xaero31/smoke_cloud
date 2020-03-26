@@ -1,17 +1,28 @@
 <!doctype html>
-<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <th:block th:replace="fragment/static-includes :: bootstrap-css"/>
+    <th:block th:replace="fragment/static-includes :: fragments-css"/>
+
     <title>Document</title>
 </head>
+
 <body>
-<h1 sec:authorize="hasAuthority('READ')">Header for readers only</h1>
+
+<th:block th:insert="fragment/page-parts :: header"/>
+<h1 sec:authorize="hasAuthority('READ')" th:text="#{index.readers.text}">Header for readers only</h1>
 <br>
 <h1>Welcome to application!</h1>
 <br>
 <h1>Unknown user</h1>
+
+<th:block th:replace="fragment/static-includes :: bootstrap-js"/>
 </body>
+
 </html>

@@ -1,66 +1,76 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Register page</title>
+    <th:block th:replace="fragment/static-includes :: bootstrap-css"/>
+    <th:block th:replace="fragment/static-includes :: fragments-css"/>
+
+    <title th:text="#{register.title}">Register page</title>
 </head>
+
 <body>
+
+<th:block th:insert="fragment/page-parts :: header"/>
 <form th:action="@{${T(com.ermakov.nikita.ControllerPath).REGISTER}}" th:object="${registerForm}" method="post">
     <div>
-        <label th:text="${'Username'}"></label>
+        <label th:text="#{register.username.field}"></label>
         <input th:field="*{username}"/>
         <p style="color: red"
            th:each="error : ${#fields.errors('username')}"
            th:text="${error}"></p>
     </div>
     <div>
-        <label th:text="${'Email'}"></label>
+        <label th:text="#{register.email.field}"></label>
         <input th:field="*{email}"/>
         <p style="color: red"
            th:each="error : ${#fields.errors('email')}"
            th:text="${error}"></p>
     </div>
     <div>
-        <label th:text="${'First name'}"></label>
+        <label th:text="#{register.first.name.field}"></label>
         <input style="text-transform: capitalize" th:field="*{firstName}"/>
         <p style="color: red"
            th:each="error : ${#fields.errors('firstName')}"
            th:text="${error}"></p>
     </div>
     <div>
-        <label th:text="${'Last Name'}"></label>
+        <label th:text="#{register.last.name.field}"></label>
         <input style="text-transform: capitalize" th:field="*{lastName}"/>
         <p style="color: red"
            th:each="error : ${#fields.errors('lastName')}"
            th:text="${error}"></p>
     </div>
     <div>
-        <label th:text="${'Middle Name'}"></label>
+        <label th:text="#{register.middle.name.field}"></label>
         <input style="text-transform: capitalize" th:field="*{middleName}"/>
         <p style="color: red"
            th:each="error : ${#fields.errors('middleName')}"
            th:text="${error}"></p>
     </div>
     <div>
-        <label th:text="${'Password'}"></label>
+        <label th:text="#{register.password.field}"></label>
         <input type="password" th:field="*{password}"/>
         <p style="color: red"
            th:each="error : ${#fields.errors('password')}"
            th:text="${error}"></p>
     </div>
     <div>
-        <label th:text="${'Confirm Password'}"></label>
+        <label th:text="#{register.confirm.password.field}"></label>
         <input type="password" th:field="*{confirmPassword}"/>
         <p style="color: red"
            th:each="error : ${#fields.errors('confirmPassword')}"
            th:text="${error}"></p>
     </div>
-    <button type="submit" th:text="${'Register'}">Register</button>
+    <button type="submit" th:text="#{register.submit.button.text}"></button>
 </form>
 <p style="color: red" th:if="${registerError != null}" th:text="${registerError}"></p>
-<a th:href="@{${T(com.ermakov.nikita.ControllerPath).LOGIN}}" th:text="${'Back to login page'}"></a>
+<a th:href="@{${T(com.ermakov.nikita.ControllerPath).LOGIN}}" th:text="#{register.back.to.login}"></a>
+
+<th:block th:replace="fragment/static-includes :: bootstrap-js"/>
 </body>
+
 </html>

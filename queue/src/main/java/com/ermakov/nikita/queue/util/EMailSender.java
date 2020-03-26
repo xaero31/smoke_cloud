@@ -6,19 +6,19 @@ import com.ermakov.nikita.entity.security.User;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletContext;
+import java.util.Locale;
 
 /**
  * created by Nikita_Ermakov at 2/26/2020
  */
 @Setter
-@PropertySource("classpath:messages.properties")
 @Scope("prototype")
 @Component("eMailSender")
 public class EMailSender {
@@ -27,6 +27,7 @@ public class EMailSender {
 
     private final JavaMailSender javaMailSender;
     private final ServletContext servletContext;
+    private final MessageSource messageSource;
 
     @Value("${application.host}")
     private String host;
@@ -34,34 +35,31 @@ public class EMailSender {
     @Value("${server.port}")
     private String port;
 
-    @Value("${verify.message.text}")
-    private String text;
-
-    @Value("${verify.message.subject}")
-    private String subject;
-
     @Value("${mail.from}")
     private String from;
 
     public EMailSender(@Autowired JavaMailSender javaMailSender,
-                       @Autowired ServletContext servletContext) {
+                       @Autowired ServletContext servletContext,
+                       @Autowired MessageSource messageSource) {
         this.javaMailSender = javaMailSender;
         this.servletContext = servletContext;
+        this.messageSource = messageSource;
     }
 
-    public void sendVerifyMessage(User user, VerificationToken token) {
+    public void sendVerifyMessage(User user, VerificationToken token, Locale locale) {
         final SimpleMailMessage message = new SimpleMailMessage();
 
         message.setTo(user.getEmail());
         message.setFrom(from);
-        message.setSubject(subject);
-        message.setText(createVerificationText(token));
+        message.setSubject(messageSource.getMessage("verify.message.subject", null, locale));
+        message.setText(createVerificationText(token, locale));
 
         javaMailSender.send(message);
     }
 
-    private String createVerificationText(VerificationToken token) {
-        return text.replace(URL_MATCHER, createVerificationUrl(token));
+    private String createVerificationText(VerificationToken token, Locale locale) {
+        final String internationalizedText = messageSource.getMessage("verify.message.text", null, locale);
+        return internationalizedText.replace(URL_MATCHER, createVerificationUrl(token));
     }
 
     @SuppressWarnings("StringBufferReplaceableByString")

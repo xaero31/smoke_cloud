@@ -329,7 +329,7 @@ public class RegisterControllerTest {
     void testFillUserInfoFromRegisterForm() {
         reset(userRepository);
 
-        registerController.registerPerform(registerForm, mock(BindingResult.class), mock(Model.class));
+        registerController.registerPerform(registerForm, mock(BindingResult.class), mock(Model.class), null);
 
         verify(userRepository, atLeastOnce()).saveUniqueUser(userCaptor.capture());
 
@@ -344,7 +344,7 @@ public class RegisterControllerTest {
         reset(profileRepository, userRepository);
         when(userRepository.saveUniqueUser(any(User.class))).thenReturn(user);
 
-        registerController.registerPerform(registerForm, mock(BindingResult.class), mock(Model.class));
+        registerController.registerPerform(registerForm, mock(BindingResult.class), mock(Model.class), null);
 
         verify(profileRepository, atLeastOnce()).save(profileCaptor.capture());
 
@@ -370,7 +370,7 @@ public class RegisterControllerTest {
         when(tokenRepository.findByToken(eq("token"))).thenReturn(verificationToken);
         when(userRepository.findById(1337)).thenReturn(user);
 
-        registerController.verifyUser(token, model);
+        registerController.verifyUser(token, model, null);
 
         assertTrue(user.isEnabled(), "Verify user method should enable user");
         verify(userRepository, atLeastOnce()).save(user);
@@ -392,7 +392,7 @@ public class RegisterControllerTest {
 
         when(tokenRepository.findByToken(eq("token"))).thenReturn(verificationToken);
 
-        registerController.verifyUser(token, model);
+        registerController.verifyUser(token, model, null);
 
         verify(userRepository, never()).save(user);
         verify(model).addAttribute(eq("error"), anyString());
@@ -404,7 +404,7 @@ public class RegisterControllerTest {
 
         when(tokenRepository.findByToken(anyString())).thenReturn(null);
 
-        registerController.verifyUser("token", model);
+        registerController.verifyUser("token", model, null);
 
         verify(userRepository, never()).save(any(User.class));
         verify(model).addAttribute(eq("error"), anyString());

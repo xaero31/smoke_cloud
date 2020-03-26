@@ -1,0 +1,19 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- header fragment uses bootstrap-js and bootstrap-css -->
+<div th:fragment="header" id="header">
+    <div>
+        <h1>Smoke-Cloud</h1>
+    </div>
+    <div class="dropdown lang">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                th:text="#{header.lang.change}"></button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="?lang=ru">Русский</a>
+            <a class="dropdown-item" href="?lang=en">English</a>
+        </div>
+    </div>
+</div>
+</html>

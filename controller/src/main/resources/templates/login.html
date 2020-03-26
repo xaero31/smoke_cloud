@@ -1,8 +1,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
+    <th:block th:replace="fragment/static-includes :: bootstrap-css"/>
+    <th:block th:replace="fragment/static-includes :: fragments-css"/>
     <title th:text="#{login.title}">Login page</title>
 </head>
+
 <body>
+
+<th:block th:insert="fragment/page-parts :: header"/>
 <h1 th:text="#{login.header}">Login</h1>
 <form name='loginForm' th:action='@{${T(com.ermakov.nikita.ControllerPath).LOGIN}}' method='POST'>
     <table>
@@ -21,5 +27,8 @@
 </form>
 <p style="color: red" th:if="${error != null}" th:text="${error}"></p>
 <p style="color: green" th:if="${success != null}" th:text="${success}"></p>
+
+<th:block th:replace="fragment/static-includes :: bootstrap-js"/>
 </body>
+
 </html>

@@ -1,13 +1,20 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <th:block th:replace="fragment/static-includes :: bootstrap-css"/>
+    <th:block th:replace="fragment/static-includes :: fragments-css"/>
+
     <title th:text="#{register.title}">Register page</title>
 </head>
+
 <body>
+
+<th:block th:insert="fragment/page-parts :: header"/>
 <form th:action="@{${T(com.ermakov.nikita.ControllerPath).REGISTER}}" th:object="${registerForm}" method="post">
     <div>
         <label th:text="#{register.username.field}"></label>
@@ -62,5 +69,8 @@
 </form>
 <p style="color: red" th:if="${registerError != null}" th:text="${registerError}"></p>
 <a th:href="@{${T(com.ermakov.nikita.ControllerPath).LOGIN}}" th:text="#{register.back.to.login}"></a>
+
+<th:block th:replace="fragment/static-includes :: bootstrap-js"/>
 </body>
+
 </html>

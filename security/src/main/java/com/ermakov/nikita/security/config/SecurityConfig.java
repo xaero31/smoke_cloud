@@ -22,6 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .antMatchers("/register",
                         "/verifyUser",
                         "/login/**",
+                        "/register/**",
                         "/css/**")
                 .permitAll()
                 .anyRequest()

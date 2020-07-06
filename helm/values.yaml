@@ -5,5 +5,3 @@ secret:
   suffix: stub
 application:
   profile: stub
-  ip:
-    number: 4

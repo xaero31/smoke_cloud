@@ -1,6 +1,6 @@
 package com.ermakov.nikita.controller;
 
-import com.ermakov.nikita.ViewName;
+import com.ermakov.nikita.ControllerPath;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller("mainController")
 public class MainController {
 
-    @GetMapping("/welcome")
+    @GetMapping(ControllerPath.ROOT)
     public String getWelcomePage() {
-        return ViewName.INDEX;
+        return ControllerPath.REDIRECT + ControllerPath.PROFILE;
     }
 }

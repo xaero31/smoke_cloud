@@ -1,6 +1,122 @@
-#header {
+.header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0% 2%;
+    padding: 0 2%;
+}
+
+.sc-header {
+    padding-right: 65%;
+}
+
+.sc-header-text {
+    color: white;
+}
+
+.sc-footer-div {
+    width: 100%;
+    padding-right: 2%;
+}
+
+.sc-footer-text {
+    color: #DADADA;
+    text-align: right;
+}
+
+.sc-header-text:hover {
+    color: gainsboro;
+    text-decoration: none;
+}
+
+.sc-profile-body {
+    display: flex;
+    flex-direction: row;
+    padding: 0 10%;
+}
+
+.sc-profile-ava {
+    width: 30%;
+    padding: 0 3% 3% 3%;
+}
+
+.sc-profile-ava-pic {
+    width: 100%;
+}
+
+.sc-profile-right-part {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    padding-right: 3%;
+}
+
+.sc-profile-info {
+    padding: 1%;
+    font-size: 20px;
+}
+
+.sc-profile-info-hookah-pic {
+    width: 35%;
+    float: right;
+    margin-left: 25px;
+}
+
+.sc-profile-wall {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sc-profile-wall-post {
+    width: 94%;
+    padding: 3%;
+    margin: 2% 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #DADADA;
+}
+
+.sc-profile-wall-post p {
+    margin-top: 14px;
+}
+
+.sc-profile-wall-post-title {
+    width: 100%;
+    align-content: start;
+}
+
+.sc-profile-wall-post-pic {
+    width: 30%;
+    margin: 5px;
+}
+
+.sc-profile-wall-post-pic-div {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.sc-profile-wall-post-menu {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2%;
+}
+
+.sc-profile-wall-post-menu p {
+    margin: 0;
+    color: dimgray;
+}
+
+.sc-profile-name {
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    padding-left: 5%;
 }

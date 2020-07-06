@@ -1,0 +1,155 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!--TODO add filling info-->
+<head>
+    <meta charset="UTF-8">
+
+    <th:block th:replace="fragment/static-includes :: bootstrap-css"/>
+    <th:block th:replace="fragment/static-includes :: fragments-css"/>
+
+    <!--todo remove-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../static/css/fragments.css" th:href="@{/css/fragments.css}">
+    <!--    todo end remove-->
+
+    <title th:text="#{profile.title}"></title>
+</head>
+
+<body>
+<!--TODO extract to page-parts-->
+<nav class="sc-header navbar navbar-dark bg-dark">
+    <a class="sc-header-text" href="#" th:href="@{${T(com.ermakov.nikita.ControllerPath).PROFILE}}">
+        <h1 class="sc-header-text">Smoke Cloud</h1>
+    </a>
+    <a class="sc-header-text" href="#" th:href="@{${T(com.ermakov.nikita.ControllerPath).PROFILE}}">
+        <h2 class="sc-header-text" th:text="#{header.profile.link}">Profile</h2>
+    </a>
+
+    <!--todo impl later-->
+    <!--todo make current page inactive in menu-->
+    <a class="sc-header-text" href="#" th:href="'#'">
+        <h2 class="sc-header-text" th:text="'todo'">Friends</h2>
+    </a>
+    <a class="sc-header-text" href="#" th:href="'#'">
+        <h2 class="sc-header-text" th:text="'todo'">Chat</h2>
+    </a>
+</nav>
+
+<th:block th:replace="fragment/static-includes :: bootstrap-js"/>
+
+<!--todo remove-->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+<!--todo end remove-->
+
+<!--profile name-->
+<div class="sc-profile-name">
+    <h1>Arkadiy Myasnitskiy</h1>
+</div>
+
+<!--main profile block-->
+<div class="sc-profile-body">
+    <!--block with ava pic-->
+    <div class="sc-profile-ava">
+        <img class="sc-profile-ava-pic" src="../static/image/ava.png" th:src="@{/image/ava.png}" alt="ava">
+    </div>
+
+    <div class="sc-profile-right-part">
+        <!--block with profile text info-->
+        <div class="sc-profile-info">
+            <img class="sc-profile-info-hookah-pic" src="../static/image/hookah.png" th:src="@{/image/hookah.png}"
+                 alt="ava">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium consectetur corporis delectus
+                ea eos, error et eveniet excepturi exercitationem facilis illum magni nesciunt officiis quos
+                sapiente, tempora tenetur voluptatem voluptates!</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium consectetur corporis delectus
+                ea eos, error et eveniet excepturi exercitationem facilis illum magni nesciunt officiis quos
+                sapiente, tempora tenetur voluptatem voluptates!</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium consectetur corporis delectus
+                ea eos, error et eveniet excepturi exercitationem facilis illum magni nesciunt officiis quos
+                sapiente, tempora tenetur voluptatem voluptates!</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium consectetur corporis delectus
+                ea eos, error et eveniet excepturi exercitationem facilis illum magni nesciunt officiis quos
+                sapiente, tempora tenetur voluptatem voluptates!</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium consectetur corporis delectus
+                ea eos, error et eveniet excepturi exercitationem facilis illum magni nesciunt officiis quos
+                sapiente, tempora tenetur voluptatem voluptates!</p>
+        </div>
+
+        <!--block with user blog-->
+        <div class="sc-profile-wall">
+            <!--post block-->
+            <div class="sc-profile-wall-post">
+                <h1 class="sc-profile-wall-post-title">Post title</h1>
+                <div class="sc-profile-wall-post-pic-div">
+                    <img class="sc-profile-wall-post-pic" src="../static/image/ava.png" th:src="@{/image/ava.png}"
+                         alt="img">
+                    <img class="sc-profile-wall-post-pic" src="../static/image/ava.png" th:src="@{/image/ava.png}"
+                         alt="img">
+                    <img class="sc-profile-wall-post-pic" src="../static/image/ava.png" th:src="@{/image/ava.png}"
+                         alt="img">
+                    <img class="sc-profile-wall-post-pic" src="../static/image/ava.png" th:src="@{/image/ava.png}"
+                         alt="img">
+                    <img class="sc-profile-wall-post-pic" src="../static/image/ava.png" th:src="@{/image/ava.png}"
+                         alt="img">
+                </div>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet debitis dolore ea enim, explicabo
+                    facere, fugiat illo illum ipsa libero magni, molestias nulla placeat quam quisquam sunt veritatis?
+                    Maiores, qui.</p>
+
+                <div class="sc-profile-wall-post-menu">
+                    <p>23-04-2020</p>
+                    <div class="btn-group sc-profile-wall-post-menu-buttons" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-secondary">Like</button>
+                        <button type="button" class="btn btn-secondary">Edit</button>
+                        <button type="button" class="btn btn-secondary">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <!--post block-->
+            <div class="sc-profile-wall-post">
+                <h1 class="sc-profile-wall-post-title">Post title</h1>
+                <div class="sc-profile-wall-post-pic-div">
+                    <img class="sc-profile-wall-post-pic" src="../static/image/ava.png" th:src="@{/image/ava.png}"
+                         alt="img">
+                    <img class="sc-profile-wall-post-pic" src="../static/image/ava.png" th:src="@{/image/ava.png}"
+                         alt="img">
+                    <img class="sc-profile-wall-post-pic" src="../static/image/ava.png" th:src="@{/image/ava.png}"
+                         alt="img">
+                </div>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet debitis dolore ea enim, explicabo
+                    facere, fugiat illo illum ipsa libero magni, molestias nulla placeat quam quisquam sunt veritatis?
+                    Maiores, qui.</p>
+
+                <div class="sc-profile-wall-post-menu">
+                    <p>23-04-2020</p>
+                    <div class="btn-group sc-profile-wall-post-menu-buttons" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-secondary">Like</button>
+                        <button type="button" class="btn btn-secondary">Edit</button>
+                        <button type="button" class="btn btn-secondary">Remove</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--footer-->
+<nav class="sc-footer navbar navbar-dark bg-dark">
+    <div class="sc-footer-div">
+        <h4 class="sc-footer-text">Smoke cloud. 2020</h4>
+    </div>
+</nav>
+
+</body>
+
+</html>

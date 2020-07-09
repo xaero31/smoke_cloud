@@ -16,4 +16,9 @@ public class ProfileController {
 //        todo add page filling
         return ViewName.PROFILE;
     }
+
+    @GetMapping(ControllerPath.ROOT)
+    public String getIndexPage() {
+        return ControllerPath.REDIRECT + ControllerPath.PROFILE;
+    }
 }

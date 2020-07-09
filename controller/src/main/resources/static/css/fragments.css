@@ -6,7 +6,18 @@
 }
 
 .sc-header {
-    padding-right: 65%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2%;
+}
+
+.sc-header-menu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 40%;
 }
 
 .sc-header-text {

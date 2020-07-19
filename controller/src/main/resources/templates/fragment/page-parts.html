@@ -5,7 +5,7 @@
 <!--TODO impl javascript:void(0) on inactive links and make inactive classes (on current page)-->
 <!-- header fragment uses thymeleaf security, bootstrap-js and bootstrap-css -->
 <nav th:fragment="header" class="sc-header navbar navbar-dark bg-dark">
-    <div>
+    <div class="sc-header-menu">
         <a class="sc-header-text" href="#" th:href="@{${T(com.ermakov.nikita.ControllerPath).ROOT}}">
             <h1 class="sc-header-text">Smoke Cloud</h1>
         </a>
@@ -28,7 +28,8 @@
     <div class="dropdown lang">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                th:text="#{header.lang.change}"></button>
+                th:text="#{header.lang.change}">Change language
+        </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="?lang=ru">Русский</a>
             <a class="dropdown-item" href="?lang=en">English</a>

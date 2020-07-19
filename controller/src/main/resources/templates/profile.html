@@ -1,5 +1,5 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <!--TODO add filling info-->
 <head>
@@ -43,7 +43,8 @@
     <div class="dropdown lang">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                th:text="#{header.lang.change}">Change language</button>
+                th:text="#{header.lang.change}">Change language
+        </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="?lang=ru">Русский</a>
             <a class="dropdown-item" href="?lang=en">English</a>
@@ -67,91 +68,83 @@
 
 <!--profile name-->
 <div class="sc-profile-name">
-<!--    TODO insert profile name-->
-    <h1>Arkadiy Myasnitskiy</h1>
+    <!--    TODO insert profile name. Test if profileName has or doesn't have middle name-->
+    <h1 th:text="${profileName}">Arkadiy Myasnitskiy</h1>
 </div>
 
 <!--main profile block-->
 <div class="sc-profile-body">
     <!--block with ava pic-->
-<!--    TODO fill profile ava-->
+    <!--    TODO fill profile ava-->
     <div class="sc-profile-ava">
-        <img class="sc-profile-ava-pic" src="../static/image/ava.png" th:src="@{/image/ava.png}" alt="ava">
+        <img class="sc-profile-ava-pic" src="../static/image/ava.png"
+             th:src="@{${profile.avatar ? profile.avatar.path
+             : T(com.ermakov.nikita.entity.constant.Image).AVATAR_PATH}}" alt="ava">
     </div>
 
     <div class="sc-profile-right-part">
         <!--block with profile text info-->
-<!--        TODO insert profile info-->
         <div class="sc-profile-info">
-            <img class="sc-profile-info-hookah-pic" src="../static/image/hookah.png" th:src="@{/image/hookah.png}"
-                 alt="ava">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium consectetur corporis delectus
-                ea eos, error et eveniet excepturi exercitationem facilis illum magni nesciunt officiis quos
-                sapiente, tempora tenetur voluptatem voluptates!</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium consectetur corporis delectus
-                ea eos, error et eveniet excepturi exercitationem facilis illum magni nesciunt officiis quos
-                sapiente, tempora tenetur voluptatem voluptates!</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium consectetur corporis delectus
-                ea eos, error et eveniet excepturi exercitationem facilis illum magni nesciunt officiis quos
-                sapiente, tempora tenetur voluptatem voluptates!</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium consectetur corporis delectus
-                ea eos, error et eveniet excepturi exercitationem facilis illum magni nesciunt officiis quos
-                sapiente, tempora tenetur voluptatem voluptates!</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium consectetur corporis delectus
-                ea eos, error et eveniet excepturi exercitationem facilis illum magni nesciunt officiis quos
-                sapiente, tempora tenetur voluptatem voluptates!</p>
+            <img class="sc-profile-info-hookah-pic" src="../static/image/hookah.png"
+                 th:src="@{${profile.hookah ? profile.hookah.path
+                 : T(com.ermakov.nikita.entity.constant.Image).HOOKAH_PATH}}" alt="ava">
+            <p th:if="${profile.cityPublic && profile.city != null}"
+               th:text="#{profile.city.prefix} + ' ' + ${profile.city}">
+                City: Moscow
+            </p>
+            <p th:if="${profile.birthDatePublic}"
+               th:text="#{profile.birth.date.prefix} + ' ' + ${#dates.format(profile.birthDate, 'dd-MM-yyyy')}">
+                Birth date: 16-02-1993
+            </p>
+            <p th:if="${profile.hookahModel != null}"
+               th:text="#{profile.hookah.model.prefix} + ' ' + ${profile.hookahModel}">
+                Hookah model: Hoob go
+            </p>
+            <p th:if="${profile.favoriteHookah != null}"
+               th:text="#{profile.hookah.favorite.prefix} + ' ' + ${profile.favoriteHookah}">
+                Favorite hookah model: Hoob go
+            </p>
+            <p th:if="${profile.favoriteTobacco != null}"
+               th:text="#{profile.tobacco.favorite.prefix} + ' ' + ${profile.favoriteTobacco}">
+                Favorite tobacco: Darkside
+            </p>
+            <p th:if="${profile.favoriteTobaccoFlavor != null}"
+               th:text="#{profile.flavor.favorite.prefix} + ' ' + ${profile.favoriteTobaccoFlavor}">
+                Favorite tobacco flavor: Pineapple
+            </p>
+            <p th:if="${profile.favoriteCoal != null}"
+               th:text="#{profile.coal.favorite.prefix} + ' ' + ${profile.favoriteCoal}">
+                Favorite coal: Ugleroad
+            </p>
+            <p th:if="${profile.favoriteHookahBar != null}"
+               th:text="#{profile.hookah.bar.favorite.prefix} + ' ' + ${profile.favoriteHookahBar}">
+                Favorite hookah bar: Mint Lounge
+            </p>
         </div>
 
         <!--block with user blog-->
         <div class="sc-profile-wall">
-<!--            TODO fill posts-->
             <!--post block-->
-            <div class="sc-profile-wall-post">
-                <h1 class="sc-profile-wall-post-title">Post title</h1>
-                <div class="sc-profile-wall-post-pic-div">
-                    <img class="sc-profile-wall-post-pic" src="../static/image/ava.png" th:src="@{/image/ava.png}"
-                         alt="img">
-                    <img class="sc-profile-wall-post-pic" src="../static/image/ava.png" th:src="@{/image/ava.png}"
-                         alt="img">
-                    <img class="sc-profile-wall-post-pic" src="../static/image/ava.png" th:src="@{/image/ava.png}"
-                         alt="img">
-                    <img class="sc-profile-wall-post-pic" src="../static/image/ava.png" th:src="@{/image/ava.png}"
-                         alt="img">
-                    <img class="sc-profile-wall-post-pic" src="../static/image/ava.png" th:src="@{/image/ava.png}"
-                         alt="img">
-                </div>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet debitis dolore ea enim, explicabo
-                    facere, fugiat illo illum ipsa libero magni, molestias nulla placeat quam quisquam sunt veritatis?
-                    Maiores, qui.</p>
+            <div class="sc-profile-wall-post" th:each="post : ${profile.posts}">
+                <!--post title-->
+                <h1 class="sc-profile-wall-post-title" th:text="${post.title}">Post title</h1>
 
+                <!--post images-->
+                <div class="sc-profile-wall-post-pic-div" th:if="${!post.img.isEmpty()}">
+                    <img class="sc-profile-wall-post-pic" src="../static/image/ava.png"
+                         th:each="img : ${post.img}" th:src="@{${img.path}}" alt="img">
+                </div>
+
+                <!--post text-->
+                <p th:if="${post.text != null}" th:text="${post.text}">Lorem ipsum dolor sit amet, consectetur
+                    adipisicing elit. Ad at autem beatae consectetur ducimus, fuga iste laborum minus molestiae rem
+                    sequi similique ut voluptatum. Dicta ducimus ea earum incidunt itaque.</p>
+
+                <!--post menu-->
                 <div class="sc-profile-wall-post-menu">
-                    <p>23-04-2020</p>
+                    <p th:text="${#dates.format(post.date, 'dd-MM-yyyy')}">23-04-2020</p>
                     <div class="btn-group sc-profile-wall-post-menu-buttons" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-secondary">Like</button>
-                        <button type="button" class="btn btn-secondary">Edit</button>
-                        <button type="button" class="btn btn-secondary">Remove</button>
-                    </div>
-                </div>
-            </div>
-
-            <!--post block-->
-            <div class="sc-profile-wall-post">
-                <h1 class="sc-profile-wall-post-title">Post title</h1>
-                <div class="sc-profile-wall-post-pic-div">
-                    <img class="sc-profile-wall-post-pic" src="../static/image/ava.png" th:src="@{/image/ava.png}"
-                         alt="img">
-                    <img class="sc-profile-wall-post-pic" src="../static/image/ava.png" th:src="@{/image/ava.png}"
-                         alt="img">
-                    <img class="sc-profile-wall-post-pic" src="../static/image/ava.png" th:src="@{/image/ava.png}"
-                         alt="img">
-                </div>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet debitis dolore ea enim, explicabo
-                    facere, fugiat illo illum ipsa libero magni, molestias nulla placeat quam quisquam sunt veritatis?
-                    Maiores, qui.</p>
-
-                <div class="sc-profile-wall-post-menu">
-                    <p>23-04-2020</p>
-                    <div class="btn-group sc-profile-wall-post-menu-buttons" role="group" aria-label="Basic example">
+                        <!--TODO add buttons functions-->
                         <button type="button" class="btn btn-secondary">Like</button>
                         <button type="button" class="btn btn-secondary">Edit</button>
                         <button type="button" class="btn btn-secondary">Remove</button>

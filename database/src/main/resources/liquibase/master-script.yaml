@@ -10,4 +10,7 @@ databaseChangeLog:
       file: add-register-mail-confirm.yaml
   - include:
       relativeToChangelogFile: true
+      file: add-profile-page.yaml
+  - include:
+      relativeToChangelogFile: true
       file: populate-test-data.yaml

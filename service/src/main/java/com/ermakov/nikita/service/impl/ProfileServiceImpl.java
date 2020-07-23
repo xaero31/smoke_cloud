@@ -1,7 +1,9 @@
 package com.ermakov.nikita.service.impl;
 
 import com.ermakov.nikita.entity.profile.Profile;
+import com.ermakov.nikita.entity.security.User;
 import com.ermakov.nikita.repository.ProfileRepository;
+import com.ermakov.nikita.repository.UserRepository;
 import com.ermakov.nikita.service.api.ProfileService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +16,13 @@ import org.springframework.stereotype.Service;
 @Service("profileService")
 public class ProfileServiceImpl implements ProfileService {
 
-    private ProfileRepository profileRepository;
+    private final ProfileRepository profileRepository;
+    private final UserRepository userRepository;
 
-    public ProfileServiceImpl(@Autowired @Qualifier("profileRepository") ProfileRepository profileRepository) {
+    public ProfileServiceImpl(@Autowired @Qualifier("profileRepository") ProfileRepository profileRepository,
+                              @Autowired @Qualifier("userRepository") UserRepository userRepository) {
         this.profileRepository = profileRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -31,6 +36,16 @@ public class ProfileServiceImpl implements ProfileService {
         profile.setMiddleName(capitalizeWord(profile.getMiddleName()));
 
         return profileRepository.save(profile);
+    }
+
+    @Override
+    public Profile findByUserName(String username) {
+        final User user = userRepository.findByUsername(username);
+        if (user == null) {
+            return null;
+        }
+
+        return profileRepository.findByUser(user);
     }
 
     private String capitalizeComplexString(String complexString) {

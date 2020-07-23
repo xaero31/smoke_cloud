@@ -8,4 +8,6 @@ import com.ermakov.nikita.entity.profile.Profile;
 public interface ProfileService {
 
     Profile save(Profile profile);
+
+    Profile findByUserName(String username);
 }

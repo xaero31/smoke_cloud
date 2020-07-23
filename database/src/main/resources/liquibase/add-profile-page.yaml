@@ -1,0 +1,141 @@
+databaseChangeLog:
+  - changeSet:
+      id: addPostTable
+      author: xaero
+      changes:
+        - createTable:
+            tableName: post
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(250)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: text
+                  type: text
+              - column:
+                  name: date
+                  type: datetime
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: profile_id
+                  type: bigint
+        - addForeignKeyConstraint:
+            baseColumnNames: profile_id
+            baseTableName: post
+            constraintName: fk_post_profile
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: profile
+            validate: true
+  - changeSet:
+      id: addImageTable
+      author: xaero
+      changes:
+        - createTable:
+            tableName: image
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: path
+                  type: varchar
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: post_id
+                  type: bigint
+        - addForeignKeyConstraint:
+            baseColumnNames: post_id
+            baseTableName: image
+            constraintName: fk_image_post
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: post
+            validate: true
+  - changeSet:
+      id: addFieldsToProfileForProfilePage
+      author: xaero
+      changes:
+        - addColumn:
+            tableName: profile
+            columns:
+              - column:
+                  name: city
+                  type: varchar(150)
+              - column:
+                  name: hookah_model
+                  type: varchar(150)
+              - column:
+                  name: favorite_hookah
+                  type: varchar(150)
+              - column:
+                  name: favorite_tobacco
+                  type: varchar(150)
+              - column:
+                  name: favorite_tobacco_flavor
+                  type: varchar(150)
+              - column:
+                  name: favorite_coal
+                  type: varchar(150)
+              - column:
+                  name: favorite_hookah_bar
+                  type: varchar(150)
+              - column:
+                  name: is_city_public
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_birth_date_public
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: birth_date
+                  type: datetime
+                  defaultValueDate: '2000-01-01'
+              - column:
+                  name: avatar_image_id
+                  type: bigint
+              - column:
+                  name: hookah_image_id
+                  type: bigint
+        - addForeignKeyConstraint:
+            baseColumnNames: avatar_image_id
+            baseTableName: profile
+            constraintName: fk_avatar_image_profile
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: image
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: hookah_image_id
+            baseTableName: profile
+            constraintName: fk_hookah_image_profile
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: image
+            validate: true

@@ -8,6 +8,9 @@ databaseChangeLog:
             tableName: users
             columns:
               - column:
+                  name: id
+                  value: 1
+              - column:
                   name: username
                   value: testuser
               - column:
@@ -22,3 +25,70 @@ databaseChangeLog:
           INSERT INTO users_roles (user_id, role_id) VALUES (
           (SELECT id FROM users WHERE username = 'testuser'),
           (SELECT id FROM roles WHERE name = 'USER'))
+  - changeSet:
+      id: fillProfileInfo
+      author: xaero
+      context: embeddedDB
+      changes:
+        - insert:
+            tableName: profile
+            columns:
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: first_name
+                  value: Arkadiy
+              - column:
+                  name: last_name
+                  value: Myasnitskiy
+              - column:
+                  name: middle_name
+                  value:
+              - column:
+                  name: city
+                  value: Moscow
+              - column:
+                  name: hookah_model
+                  value: Hoob GO
+              - column:
+                  name: favorite_tobacco
+                  value: COBRA
+              - column:
+                  name: birth_date
+                  value: '1993-02-16'
+  - changeSet:
+      id: insertProfilePosts
+      author: xaero
+      context: embeddedDB
+      changes:
+        - insert:
+            tableName: post
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: title
+                  value: 'Post title'
+              - column:
+                  name: text
+                  value: 'Some post text'
+              - column:
+                  name: profile_id
+                  value: 1
+        - insert:
+            tableName: post
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: title
+                  value: 'Another post title'
+              - column:
+                  name: text
+                  value: 'Another post text'
+              - column:
+                  name: profile_id
+                  value: 1

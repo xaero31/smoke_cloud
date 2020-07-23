@@ -1,0 +1,130 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <meta charset="UTF-8">
+
+    <th:block th:replace="fragment/static-includes :: bootstrap-css"/>
+    <!--TODO separate css file-->
+    <th:block th:replace="fragment/static-includes :: fragments-css"/>
+
+    <title th:text="#{profile.title}"></title>
+</head>
+
+<body>
+
+<div class="sc-wrapper">
+    <div class="sc-content">
+        <th:block th:insert="fragment/page-parts :: header"/>
+        <th:block th:replace="fragment/static-includes :: bootstrap-js"/>
+
+        <!--profile name-->
+        <div class="sc-profile-name">
+            <h1 th:text="${profileName}">Arkadiy Myasnitskiy</h1>
+        </div>
+
+        <!--main profile block-->
+        <div class="sc-profile-body">
+            <!--block with ava pic-->
+            <div class="sc-profile-ava">
+                <img class="sc-profile-ava-pic" src="../static/image/avatar.png"
+                     th:src="@{${profile.avatar != null ? profile.avatar.path
+             : T(com.ermakov.nikita.entity.constant.Image).AVATAR_PATH}}" alt="ava">
+            </div>
+
+            <div class="sc-profile-right-part">
+                <!--block with profile text info-->
+                <div class="sc-profile-info">
+                    <img class="sc-profile-info-hookah-pic" src="../static/image/hookah.png"
+                         th:src="@{${profile.hookah != null ? profile.hookah.path
+                 : T(com.ermakov.nikita.entity.constant.Image).HOOKAH_PATH}}" alt="ava">
+                    <p th:if="${profile.cityPublic && profile.city != null}"
+                       th:text="#{profile.city.prefix} + ' ' + ${profile.city}">
+                        City: Moscow
+                    </p>
+                    <p th:if="${profile.birthDatePublic}"
+                       th:text="#{profile.birth.date.prefix} + ' ' + ${#dates.format(profile.birthDate, 'dd-MM-yyyy')}">
+                        Birth date: 16-02-1993
+                    </p>
+                    <p th:if="${profile.hookahModel != null}"
+                       th:text="#{profile.hookah.model.prefix} + ' ' + ${profile.hookahModel}">
+                        Hookah model: Hoob go
+                    </p>
+                    <p th:if="${profile.favoriteHookah != null}"
+                       th:text="#{profile.hookah.favorite.prefix} + ' ' + ${profile.favoriteHookah}">
+                        Favorite hookah model: Hoob go
+                    </p>
+                    <p th:if="${profile.favoriteTobacco != null}"
+                       th:text="#{profile.tobacco.favorite.prefix} + ' ' + ${profile.favoriteTobacco}">
+                        Favorite tobacco: Darkside
+                    </p>
+                    <p th:if="${profile.favoriteTobaccoFlavor != null}"
+                       th:text="#{profile.flavor.favorite.prefix} + ' ' + ${profile.favoriteTobaccoFlavor}">
+                        Favorite tobacco flavor: Pineapple
+                    </p>
+                    <p th:if="${profile.favoriteCoal != null}"
+                       th:text="#{profile.coal.favorite.prefix} + ' ' + ${profile.favoriteCoal}">
+                        Favorite coal: Ugleroad
+                    </p>
+                    <p th:if="${profile.favoriteHookahBar != null}"
+                       th:text="#{profile.hookah.bar.favorite.prefix} + ' ' + ${profile.favoriteHookahBar}">
+                        Favorite hookah bar: Mint Lounge
+                    </p>
+                </div>
+
+                <!--block with user blog-->
+                <div class="sc-profile-wall">
+                    <!--wall menu block-->
+                    <div class="sc-profile-wall-menu">
+                        <button type="button" class="btn btn-secondary" th:text="#{profile.wall.new.post}">
+                            New post
+                        </button>
+                    </div>
+
+                    <!--post block-->
+                    <div class="sc-profile-wall-post" th:each="post : ${profile.posts}">
+                        <!--post title-->
+                        <h1 class="sc-profile-wall-post-title" th:text="${post.title}">Post title</h1>
+
+                        <!--post images-->
+                        <div class="sc-profile-wall-post-pic-div" th:if="${!post.images.isEmpty()}">
+                            <img class="sc-profile-wall-post-pic" src="../static/image/avatar.png"
+                                 th:each="image : ${post.images}" th:src="@{${image.path}}" alt="img">
+                        </div>
+
+                        <!--post text-->
+                        <p th:if="${post.text != null}" th:text="${post.text}">Lorem ipsum dolor sit amet, consectetur
+                            adipisicing elit. Ad at autem beatae consectetur ducimus, fuga iste laborum minus molestiae
+                            rem
+                            sequi similique ut voluptatum. Dicta ducimus ea earum incidunt itaque.</p>
+
+                        <!--post menu-->
+                        <div class="sc-profile-wall-post-menu">
+                            <p th:text="${#dates.format(post.date, 'dd-MM-yyyy')}">23-04-2020</p>
+                            <div class="btn-group sc-profile-wall-post-menu-buttons" role="group"
+                                 aria-label="Basic example">
+                                <!--TODO add buttons functions-->
+                                <button type="button" class="btn btn-secondary" th:text="#{profile.post.like}">
+                                    Like
+                                </button>
+                                <button type="button" class="btn btn-secondary" th:text="#{profile.post.edit}">
+                                    Edit
+                                </button>
+                                <button type="button" class="btn btn-secondary" th:text="#{profile.post.remove}">
+                                    Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--TODO fit footer to bottom of page-->
+    <th:block th:insert="fragment/page-parts :: footer"/>
+</div>
+
+</body>
+
+</html>

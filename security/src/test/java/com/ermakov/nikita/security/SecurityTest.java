@@ -19,20 +19,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class SecurityTest {
 
-	@Autowired
-	private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-	@Test
-	@WithMockUser
-	void welcomePageTest() throws Exception {
-		mockMvc.perform(get("/"))
-				.andExpect(status().isOk());
-	}
+    @Test
+    @WithMockUser
+    void welcomePageTest() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/profile"));
+    }
 
-	@Test
-	void notAuthenticatedMainControllerRequest_RedirectToLogin() throws Exception {
-		mockMvc.perform(get("/"))
-				.andExpect(status().isFound())
-				.andExpect(redirectedUrl("http://localhost/login"));
-	}
+    @Test
+    void notAuthenticatedMainControllerRequest_RedirectToLogin() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("http://localhost/login"));
+    }
 }

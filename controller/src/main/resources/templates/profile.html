@@ -74,6 +74,13 @@
 
                 <!--block with user blog-->
                 <div class="sc-profile-wall">
+                    <!--wall menu block-->
+                    <div class="sc-profile-wall-menu">
+                        <button type="button" class="btn btn-secondary" th:text="#{profile.wall.new.post}">
+                            New post
+                        </button>
+                    </div>
+
                     <!--post block-->
                     <div class="sc-profile-wall-post" th:each="post : ${profile.posts}">
                         <!--post title-->
@@ -97,9 +104,15 @@
                             <div class="btn-group sc-profile-wall-post-menu-buttons" role="group"
                                  aria-label="Basic example">
                                 <!--TODO add buttons functions-->
-                                <button type="button" class="btn btn-secondary">Like</button>
-                                <button type="button" class="btn btn-secondary">Edit</button>
-                                <button type="button" class="btn btn-secondary">Remove</button>
+                                <button type="button" class="btn btn-secondary" th:text="#{profile.post.like}">
+                                    Like
+                                </button>
+                                <button type="button" class="btn btn-secondary" th:text="#{profile.post.edit}">
+                                    Edit
+                                </button>
+                                <button type="button" class="btn btn-secondary" th:text="#{profile.post.remove}">
+                                    Remove
+                                </button>
                             </div>
                         </div>
                     </div>

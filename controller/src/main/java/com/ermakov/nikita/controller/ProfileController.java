@@ -27,14 +27,34 @@ public class ProfileController {
 
     @GetMapping(path = ControllerPath.PROFILE)
     public String getProfilePage(Model model) {
-        final SecurityContext context = SecurityContextHolder.getContext();
-        final UserDetails principal = (UserDetails) context.getAuthentication().getPrincipal();
-        final Profile profile = profileService.findByUserName(principal.getUsername());
+        final Profile profile = getCurrentProfile();
 
         model.addAttribute("profile", profile);
         model.addAttribute("profileName", resolveProfileName(profile));
 
         return ViewName.PROFILE;
+    }
+
+    @GetMapping(path = ControllerPath.PROFILE_EDIT)
+    public String getProfileEditPage(Model model) {
+        final Profile profile = getCurrentProfile();
+
+        model.addAttribute("profile", profile);
+        model.addAttribute("profileName", resolveProfileName(profile));
+
+        return ViewName.PROFILE_EDIT;
+    }
+
+    @GetMapping(ControllerPath.ROOT)
+    public String getIndexPage() {
+        return ControllerPath.REDIRECT + ControllerPath.PROFILE;
+    }
+
+    private Profile getCurrentProfile() {
+        final SecurityContext context = SecurityContextHolder.getContext();
+        final UserDetails principal = (UserDetails) context.getAuthentication().getPrincipal();
+
+        return profileService.findByUserName(principal.getUsername());
     }
 
     private String resolveProfileName(Profile profile) {
@@ -52,10 +72,5 @@ public class ProfileController {
         stringBuilder.append(profile.getLastName());
 
         return stringBuilder.toString();
-    }
-
-    @GetMapping(ControllerPath.ROOT)
-    public String getIndexPage() {
-        return ControllerPath.REDIRECT + ControllerPath.PROFILE;
     }
 }

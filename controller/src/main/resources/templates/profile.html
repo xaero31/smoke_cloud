@@ -25,11 +25,16 @@
 
         <!--main profile block-->
         <div class="sc-profile-body">
-            <!--block with ava pic-->
-            <div class="sc-profile-ava">
+            <div class="sc-profile-left-part">
                 <img class="sc-profile-ava-pic" src="../static/image/avatar.png"
                      th:src="@{${profile.avatar != null ? profile.avatar.path
-             : T(com.ermakov.nikita.entity.constant.Image).AVATAR_PATH}}" alt="ava">
+                         : T(com.ermakov.nikita.entity.constant.Image).AVATAR_PATH}}" alt="ava">
+
+                <!--profile menu block-->
+                <div class="sc-profile-menu">
+                    <a class="badge badge-light" th:href="@{${T(com.ermakov.nikita.ControllerPath).PROFILE_EDIT}}"
+                       th:text="#{profile.edit}">Edit profile</a>
+                </div>
             </div>
 
             <div class="sc-profile-right-part">

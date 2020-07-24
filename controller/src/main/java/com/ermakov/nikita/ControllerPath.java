@@ -11,4 +11,7 @@ public interface ControllerPath {
     String LOGIN = "/login";
 
     String PROFILE = "/profile";
+    String PROFILE_EDIT = PROFILE + "/edit";
+
+    String LOGOUT = "/logout";
 }

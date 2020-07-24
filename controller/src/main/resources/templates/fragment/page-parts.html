@@ -6,33 +6,39 @@
 <!-- header fragment uses thymeleaf security, bootstrap-js and bootstrap-css -->
 <nav th:fragment="header" class="sc-header navbar navbar-dark bg-dark">
     <div class="sc-header-menu">
-        <a class="sc-header-text" href="#" th:href="@{${T(com.ermakov.nikita.ControllerPath).ROOT}}">
-            <h1 class="sc-header-text">Smoke Cloud</h1>
+        <a class="sc-header-link" href="#" th:href="@{${T(com.ermakov.nikita.ControllerPath).ROOT}}">
+            <h1>Smoke Cloud</h1>
         </a>
-        <a sec:authorize="hasAuthority('READ')"
-           class="sc-header-text" href="#" th:href="@{${T(com.ermakov.nikita.ControllerPath).PROFILE}}">
-            <h2 class="sc-header-text" th:text="#{header.profile.link}">Profile</h2>
+        <a sec:authorize="hasAuthority('READ')" class="sc-header-link" href="#"
+           th:href="@{${T(com.ermakov.nikita.ControllerPath).PROFILE}}">
+            <h2 th:text="#{header.profile.link}">Profile</h2>
         </a>
 
         <!--todo impl later-->
-        <a sec:authorize="hasAuthority('READ')"
-           class="sc-header-text" href="#" th:href="'#'">
-            <h2 class="sc-header-text" th:text="'todo'">Friends</h2>
+        <a sec:authorize="hasAuthority('READ')" class="sc-header-link" href="#" th:href="'#'">
+            <h2 th:text="'todo'">Friends</h2>
         </a>
-        <a sec:authorize="hasAuthority('READ')"
-           class="sc-header-text" href="#" th:href="'#'">
-            <h2 class="sc-header-text" th:text="'todo'">Chat</h2>
+        <a sec:authorize="hasAuthority('READ')" class="sc-header-link" href="#" th:href="'#'">
+            <h2 th:text="'todo'">Chat</h2>
         </a>
     </div>
 
-    <div class="dropdown lang">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                th:text="#{header.lang.change}">Change language
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="?lang=ru">Русский</a>
-            <a class="dropdown-item" href="?lang=en">English</a>
+    <div class="sc-header-menu-right">
+        <div sec:authorize="hasAuthority('READ')" style="margin-right: 30px">
+            <a class="sc-header-link" href="#" th:href="@{${T(com.ermakov.nikita.ControllerPath).LOGOUT}}">
+                <h2 class="sc-header-link" th:text="#{profile.logout}">Logout</h2>
+            </a>
+        </div>
+
+        <div class="dropdown lang">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{header.lang.change}">
+                Change language
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="?lang=ru">Русский</a>
+                <a class="dropdown-item" href="?lang=en">English</a>
+            </div>
         </div>
     </div>
 </nav>

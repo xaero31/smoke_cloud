@@ -40,8 +40,22 @@ html, body {
     width: 40%;
 }
 
-.sc-header-text {
+.sc-header-link {
     color: white;
+    margin: 0 10px;
+}
+
+.sc-header-link h1,
+.sc-header-link h2 {
+    margin: 5px 0;
+}
+
+.sc-header-menu-right {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
 }
 
 .sc-footer {
@@ -58,7 +72,7 @@ html, body {
     text-align: right;
 }
 
-.sc-header-text:hover {
+.sc-header-link:hover {
     color: gainsboro;
     text-decoration: none;
 }
@@ -69,9 +83,24 @@ html, body {
     padding: 0 10%;
 }
 
-.sc-profile-ava {
+.sc-profile-left-part {
+    display: flex;
+    flex-direction: column;
     width: 30%;
     padding: 0 3% 3% 3%;
+}
+
+.sc-profile-menu {
+    display: flex;
+    flex-direction: column;
+    padding: 2% 0;
+}
+
+.sc-profile-menu a {
+    width: 100%;
+    height: 50px;
+    line-height: 40px;
+    font-size: large;
 }
 
 .sc-profile-ava-pic {

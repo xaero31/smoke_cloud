@@ -76,4 +76,17 @@ public class ProfileControllerTest {
                 .andExpect(model().attribute("profileName", "Maksim Lepyohin"))
                 .andReturn();
     }
+
+    @Test
+    @WithMockUser(username = "username")
+    void editProfileShouldReturnEditProfilePage() throws Exception {
+        profile.setFirstName("Maksim");
+        profile.setLastName("Lepyohin");
+
+        mockMvc.perform(get(ControllerPath.PROFILE_EDIT))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("profile"))
+                .andExpect(model().attributeExists("profileName"))
+                .andReturn();
+    }
 }

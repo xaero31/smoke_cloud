@@ -45,8 +45,9 @@ public class EMailSenderTest {
         eMailSender.setPort("80");
 
         lenient().when(servletContext.getContextPath()).thenReturn("/smoke-cloud");
-        lenient().when(messageSource.getMessage(eq("verify.message.text"), any(), nullable(Locale.class)))
-                .thenReturn("Some email text with url: {URL}");
+        lenient().when(messageSource.getMessage(eq("verify.message.text"), any(Object[].class), nullable(Locale.class)))
+                .thenAnswer(invocation ->
+                        "Some email text with url: " + invocation.getArgument(1, Object[].class)[0]);
         lenient().when(messageSource.getMessage(eq("verify.message.subject"), any(), nullable(Locale.class)))
                 .thenReturn("mail subject");
     }

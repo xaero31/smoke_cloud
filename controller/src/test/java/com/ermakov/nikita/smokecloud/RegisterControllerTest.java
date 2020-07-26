@@ -22,16 +22,19 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,8 +50,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class RegisterControllerTest {
 
+    private static final String DISABLED_USER_MESSAGE = "Test user is disabled. Check email for activating";
+    private static final String REGISTERED_USER_MESSAGE = "Test user is registered now. Check email for activating";
+
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private MessageSource messageSource;
 
     @MockBean
     private RegisterEventListener registerEventListener;
@@ -84,10 +93,16 @@ public class RegisterControllerTest {
         registerForm.setLastName("Lastname");
         registerForm.setMiddleName("Middlename");
 
-        lenient().when(userRepository.saveUniqueUser(any(User.class))).thenReturn(new User());
+        lenient().when(userRepository.findByUsername(anyString())).thenReturn(null);
         lenient().when(roleRepository.findByName(anyString())).thenReturn(new Role());
         lenient().when(profileRepository.save(any(Profile.class))).thenReturn(new Profile());
         lenient().when(passwordEncoder.encode(anyString())).then(invocation -> invocation.getArgument(0));
+
+        lenient().when(messageSource.getMessage(eq("register.user.disabled"), any(), nullable(Locale.class)))
+                .thenReturn(DISABLED_USER_MESSAGE);
+        lenient().when(messageSource.getMessage(eq("register.user.registered"), any(), nullable(Locale.class)))
+                .thenReturn(REGISTERED_USER_MESSAGE);
+        lenient().when(messageSource.getMessage(anyString(), eq(null), nullable(Locale.class))).thenReturn("message");
 
         userCaptor = ArgumentCaptor.forClass(User.class);
         profileCaptor = ArgumentCaptor.forClass(Profile.class);
@@ -103,35 +118,53 @@ public class RegisterControllerTest {
 
     @Test
     void registerPostShouldCheckUserAndInsertNewUserByRepositories() throws Exception {
-        testRegisterPostForNotExistingErrors();
+        when(userRepository.save(any(User.class))).thenReturn(new User());
+
+        testRegisterPostForNotExistingErrors(REGISTERED_USER_MESSAGE);
+
+        verify(userRepository, atLeastOnce()).findByUsername(anyString());
+        verify(userRepository, atLeastOnce()).save(any(User.class));
         verify(profileRepository, atLeastOnce()).save(any(Profile.class));
     }
 
     @Test
     void registerPostShouldPublishRegisterEvent() throws Exception {
-        doNothing().when(registerEventListener).sendMailConfirmingNotification(any(RegisterEvent.class));
-        testRegisterPostForNotExistingErrors();
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0, User.class));
+
+        testRegisterPostForNotExistingErrors(REGISTERED_USER_MESSAGE);
         verify(registerEventListener, atLeastOnce()).sendMailConfirmingNotification(any(RegisterEvent.class));
     }
 
-    private void testRegisterPostForNotExistingErrors() throws Exception {
-        mockMvc.perform(post("/register")
-                .flashAttr("registerForm", registerForm)
-                .with(csrf()))
-                .andExpect(model().attributeDoesNotExist("errors"))
-                .andExpect(redirectedUrl("/login"))
-                .andReturn();
-    }
-
     @Test
-    void registerUserWithExistingUserNameShouldReturnErrors() throws Exception {
-        when(userRepository.saveUniqueUser(any(User.class))).thenReturn(null);
+    void registerUserWithExistingUserNameAndEnabledShouldReturnErrors() throws Exception {
+        final User user = new User();
+        user.setEnabled(true);
+
+        reset(userRepository);
+        when(userRepository.findByUsername(anyString())).thenReturn(user);
+
         mockMvc.perform(post("/register")
                 .flashAttr("registerForm", registerForm)
                 .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("registerError"))
                 .andReturn();
+
+        verify(userRepository, never()).save(any(User.class));
+        verify(profileRepository, never()).save(any(Profile.class));
+        verify(registerEventListener, never()).sendMailConfirmingNotification(any(RegisterEvent.class));
+    }
+
+    @Test
+    void registerUserWithExistingUserNameButNotEnabledShouldCreateTokenAndNotUpdateUser() throws Exception {
+        reset(userRepository);
+        when(userRepository.findByUsername(anyString())).thenReturn(new User());
+
+        testRegisterPostForNotExistingErrors(DISABLED_USER_MESSAGE);
+
+        verify(userRepository, never()).save(any(User.class));
+        verify(profileRepository, never()).save(any(Profile.class));
+        verify(registerEventListener, atLeastOnce()).sendMailConfirmingNotification(any(RegisterEvent.class));
     }
 
     @Test
@@ -228,7 +261,7 @@ public class RegisterControllerTest {
     }
 
     @Test
-    void registerWithFirstNameNotOblyOfLettersShouldReturnErrors() throws Exception {
+    void registerWithFirstNameNotOnlyOfLettersShouldReturnErrors() throws Exception {
         registerForm.setFirstName("ads2-");
         testRegisterPostForExistingErrors();
     }
@@ -289,14 +322,18 @@ public class RegisterControllerTest {
 
     @Test
     void registerWithNullMiddleNameShouldWorkProperly() throws Exception {
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0, User.class));
+
         registerForm.setMiddleName(null);
-        testRegisterPostForNotExistingErrors();
+        testRegisterPostForNotExistingErrors(REGISTERED_USER_MESSAGE);
     }
 
     @Test
     void registerWithEmptyMiddleNameShouldWorkProperly() throws Exception {
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0, User.class));
+
         registerForm.setMiddleName("");
-        testRegisterPostForNotExistingErrors();
+        testRegisterPostForNotExistingErrors(REGISTERED_USER_MESSAGE);
     }
 
     @Test
@@ -328,10 +365,12 @@ public class RegisterControllerTest {
     @Test
     void testFillUserInfoFromRegisterForm() {
         reset(userRepository);
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0, User.class));
 
-        registerController.registerPerform(registerForm, mock(BindingResult.class), mock(Model.class), null);
+        registerController.registerPerform(registerForm, mock(BindingResult.class), mock(Model.class),
+                mock(RedirectAttributes.class), null);
 
-        verify(userRepository, atLeastOnce()).saveUniqueUser(userCaptor.capture());
+        verify(userRepository, atLeastOnce()).save(userCaptor.capture());
 
         assertEquals(registerForm.getUsername(), userCaptor.getValue().getUsername());
         assertEquals(registerForm.getPassword(), userCaptor.getValue().getPassword());
@@ -342,9 +381,10 @@ public class RegisterControllerTest {
     void testFillProfileInfoFromRegisterForm() {
         final User user = new User();
         reset(profileRepository, userRepository);
-        when(userRepository.saveUniqueUser(any(User.class))).thenReturn(user);
+        when(userRepository.save(any(User.class))).thenReturn(user);
 
-        registerController.registerPerform(registerForm, mock(BindingResult.class), mock(Model.class), null);
+        registerController.registerPerform(registerForm, mock(BindingResult.class), mock(Model.class),
+                mock(RedirectAttributes.class), null);
 
         verify(profileRepository, atLeastOnce()).save(profileCaptor.capture());
 
@@ -408,6 +448,15 @@ public class RegisterControllerTest {
 
         verify(userRepository, never()).save(any(User.class));
         verify(model).addAttribute(eq("error"), anyString());
+    }
+
+    private void testRegisterPostForNotExistingErrors(String message) throws Exception {
+        mockMvc.perform(post("/register")
+                .flashAttr("registerForm", registerForm)
+                .with(csrf()))
+                .andExpect(flash().attribute("registerMessage", message))
+                .andExpect(redirectedUrl("/login"))
+                .andReturn();
     }
 
     private void testRegisterPostForExistingErrors() throws Exception {

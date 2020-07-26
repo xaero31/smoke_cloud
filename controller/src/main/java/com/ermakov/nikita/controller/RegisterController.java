@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.time.Instant;
@@ -73,25 +74,49 @@ public class RegisterController {
     public String registerPerform(@ModelAttribute @Valid RegisterForm registerForm,
                                   BindingResult result,
                                   Model model,
+                                  RedirectAttributes redirectAttributes,
                                   Locale locale) {
         if (result.hasErrors()) {
             return ViewName.REGISTER;
         }
 
-        final User user = saveUser(registerForm);
-        if (user != null) {
-            saveProfile(registerForm, user);
-            eventPublisher.publishEvent(new RegisterEvent(this, user, locale));
+        final User existingUser = userRepository.findByUsername(registerForm.getUsername());
+        if (existingUser == null) {
+            User newUser = fillUser(registerForm);
 
-            log.info("Registered new user: {}", user.getUsername());
+            newUser = userRepository.save(newUser);
+            saveProfile(registerForm, newUser);
+
+            eventPublisher.publishEvent(new RegisterEvent(this, newUser, locale));
+
+            final String username = newUser.getUsername();
+            redirectAttributes.addFlashAttribute("registerMessage", messageSource.getMessage(
+                    "register.user.registered", new Object[]{username, newUser.getEmail()}, locale));
+
+            log.info("Registered new user: {}", username);
             return ControllerPath.REDIRECT + ControllerPath.LOGIN;
-        } else {
-            model.addAttribute("registerError",
-                    String.format(messageSource.getMessage("register.user.exists", null, locale),
-                            registerForm.getUsername()));
+        }
 
-            log.info("User {} already exists", registerForm.getUsername());
+        if (existingUser.isEnabled()) {
+            final String username = existingUser.getUsername();
+
+            model.addAttribute("registerError",
+                    String.format(messageSource.getMessage("register.user.exists", new Object[]{username}, locale),
+                            username));
+
+            log.info("User {} already exists", username);
             return ViewName.REGISTER;
+        } else {
+            eventPublisher.publishEvent(new RegisterEvent(this, existingUser, locale));
+
+            final String username = existingUser.getUsername();
+            final String email = existingUser.getEmail();
+
+            redirectAttributes.addFlashAttribute("registerMessage", messageSource.getMessage(
+                    "register.user.disabled", new Object[]{username, email}, locale));
+
+            log.info("User {} exists. Sending email activation link to {}.", username, email);
+            return ControllerPath.REDIRECT + ControllerPath.LOGIN;
         }
     }
 
@@ -127,7 +152,7 @@ public class RegisterController {
         return ViewName.LOGIN;
     }
 
-    private User saveUser(RegisterForm registerForm) {
+    private User fillUser(RegisterForm registerForm) {
         final User user = new User();
 
         user.setUsername(registerForm.getUsername());
@@ -138,7 +163,7 @@ public class RegisterController {
         user.setNonExpired(true);
         user.setNonLocked(true);
 
-        return userRepository.saveUniqueUser(user);
+        return user;
     }
 
     private void saveProfile(RegisterForm registerForm, User user) {

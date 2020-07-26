@@ -58,8 +58,7 @@ public class EMailSender {
     }
 
     private String createVerificationText(VerificationToken token, Locale locale) {
-        final String internationalizedText = messageSource.getMessage("verify.message.text", null, locale);
-        return internationalizedText.replace(URL_MATCHER, createVerificationUrl(token));
+        return messageSource.getMessage("verify.message.text", new Object[]{createVerificationUrl(token)}, locale);
     }
 
     @SuppressWarnings("StringBufferReplaceableByString")

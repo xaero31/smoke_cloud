@@ -27,6 +27,7 @@
 </form>
 <p style="color: red" th:if="${error != null}" th:text="${error}"></p>
 <p style="color: green" th:if="${success != null}" th:text="${success}"></p>
+<p style="color: green" th:if="${registerMessage != null}" th:text="${registerMessage}"></p>
 
 <th:block th:replace="fragment/static-includes :: bootstrap-js"/>
 </body>
